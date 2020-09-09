@@ -37,11 +37,15 @@ class _BillDetailsState extends State<BillDetails> {
   _payBill() async{
     // _backendVerify();
     var drBal = widget.balance.ceil();
+    var bal = 1000;
 
     // Calculate this discount based on if HMO is selected
       // First check that _policy is not null
       if(_policy != null){
         print('Policy discount is not null');
+        var discountAmount = (_policy['discount'] / 100) * bal;
+        var finalAmount = bal - discountAmount;
+        print(finalAmount);
       }
       
     // // Get User Email
