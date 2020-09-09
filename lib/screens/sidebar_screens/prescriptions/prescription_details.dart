@@ -41,8 +41,8 @@ class _PrescriptionDetailsState extends State<PrescriptionDetails> {
                           width: MediaQuery.of(context).size.width * 1,
                           height: MediaQuery.of(context).size.height * 1,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
                             ),
                           child: SingleChildScrollView(
                                   child: Center(

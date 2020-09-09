@@ -16,6 +16,14 @@ class MedicalHistoryHome extends StatefulWidget {
 
 class _MedicalHistoryHomeState extends State<MedicalHistoryHome> {
   // final AsyncMemoizer _memoizer = AsyncMemoizer();
+  var _history;
+
+  @override
+  void initState() { 
+    super.initState();
+    _history = _getMedicalHistory();
+  }
+
   // Methods Initialization
   Future<List<Data>> _getMedicalHistory() async{
     var _token = await getToken();
@@ -45,13 +53,13 @@ class _MedicalHistoryHomeState extends State<MedicalHistoryHome> {
     
   }
 
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // _getMedicalHistory();
+  // Refresh Function
+  Future<void> _refresh(){
+    setState(() {
+      _history = _getMedicalHistory();
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -74,74 +82,102 @@ class _MedicalHistoryHomeState extends State<MedicalHistoryHome> {
                   extendBodyBehindAppBar: true,
                   resizeToAvoidBottomInset: true,
                   backgroundColor: Colors.transparent,
-                  body: SafeArea(
-                          child: Container(
-                          padding: EdgeInsets.only(top: 50, ),
-                          width: MediaQuery.of(context).size.width * 1,
-                          height: MediaQuery.of(context).size.height * 1,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
-                            ),
-                          child: SingleChildScrollView(
-                                  child: new Center(child: Padding(
-                                          padding: EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 20.0),
-                                            child: Column(mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                // Content
-                                                // SizedBox(height: 35,),
+                  body: RefreshIndicator(
+                      onRefresh: _refresh,
+                          child: SafeArea(
+                            child: Container(
+                            padding: EdgeInsets.only(top: 50, ),
+                            width: MediaQuery.of(context).size.width * 1,
+                            height: MediaQuery.of(context).size.height * 1,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
+                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                SingleChildScrollView(
+                                        child: new Center(child: Padding(
+                                                padding: EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 20.0),
+                                                  child: Column(mainAxisSize: MainAxisSize.min,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      // Content
+                                                      // SizedBox(height: 35,),
 
-                                                // SetUp a Future Builder
-                                                FutureBuilder(
-                                                  future: _getMedicalHistory(),
-                                                  builder: (BuildContext context, snapshot){
-                                                    try {
-                                                        if(snapshot.connectionState == ConnectionState.done){
-                                                          if(snapshot.data.length != 0) {
-                                                              return ListView.builder(
-                                                                  itemCount: snapshot.data.length,
-                                                                  scrollDirection: Axis.vertical,
-                                                                  shrinkWrap: true,
-                                                                  itemBuilder: (BuildContext context, int index){
-                                                                    return InkWell(
-                                                                              child: PersonCard(title: snapshot.data[index].doctor != null ? snapshot.data[index].doctor : 'No name', imageUrl: "images/booked_appointment_image.png", rightSubTitle: snapshot.data[index].createdAt != null ? snapshot.data[index].createdAt : 'June 2, 2020',),
-                                                                              onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalHistoryTabs(historyId: snapshot.data[index].id,) )); },
-                                                                            );
-                                                                  },
-                                                                );
-                                                          }else{
-                                                            return Text('No Medical History');
+                                                      // SetUp a Future Builder
+                                                      FutureBuilder(
+                                                        future: _history,
+                                                        builder: (BuildContext context, snapshot){
+                                                          try {
+                                                              if(snapshot.connectionState == ConnectionState.done){
+                                                                if(snapshot.data.length != 0) {
+                                                                    return ListView.builder(
+                                                                        itemCount: snapshot.data.length,
+                                                                        scrollDirection: Axis.vertical,
+                                                                        shrinkWrap: true,
+                                                                        itemBuilder: (BuildContext context, int index){
+                                                                          return InkWell(
+                                                                                    child: PersonCard(title: snapshot.data[index].doctor != null ? snapshot.data[index].doctor : 'No name', imageUrl: "images/booked_appointment_image.png", rightSubTitle: snapshot.data[index].createdAt != null ? snapshot.data[index].createdAt : 'June 2, 2020',),
+                                                                                    onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalHistoryTabs(historyId: snapshot.data[index].id,) )); },
+                                                                                  );
+                                                                        },
+                                                                      );
+                                                                }else{
+                                                                  return Text('No Medical History');
+                                                                }
+                                                            } else {
+                                                              return Container(
+                                                                        height: MediaQuery.of(context).size.height * 0.6,
+                                                                        child: GeneralShimmer(),
+                                                                        // SpinKitWave(size: 30.0, color: hex("#1A1CF8"),)
+                                                                        );
+                                                            }
+                                                          } catch (e) {
+                                                              print(e);
+                                                              return Text('Network Error!');
                                                           }
-                                                      } else {
-                                                        return Container(
-                                                                  height: MediaQuery.of(context).size.height * 0.6,
-                                                                  child: GeneralShimmer(),
-                                                                  // SpinKitWave(size: 30.0, color: hex("#1A1CF8"),)
-                                                                  );
-                                                      }
-                                                    } catch (e) {
-                                                        print(e);
-                                                        return Text('Network Error!');
-                                                    }
-                                                  } 
+                                                        } 
+                                                      ),
+                                                      // snapshot.data[index].doctor
+                                                      // InkWell(
+                                                      //   child: PersonCard(title: 'Dr. Livingstone', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
+                                                      //   onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalHistoryTabs() )); },
+                                                      //   ),
+                                                      // PersonCard(title: 'Dr. Somto', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
+                                                      // PersonCard(title: 'Dr. Stanley', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
+                                                      // PersonCard(title: 'Dr. Isah', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
+                                                      // PersonCard(title: 'Dr. Jules', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
+                                                      // PersonCard(title: 'Dr. Jules', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
+                                                      // PersonCard(title: 'Dr. Jules', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
+                                                    ],
+                                                    ),
+                                                ))
+                                      ),
+
+
+                                       Padding(
+                                         padding: const EdgeInsets.only(bottom: 10.0),
+                                         child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(22.0),
+                                                  child: MaterialButton(
+                                                    disabledColor: Colors.blue[200],
+                                                    onPressed: (){
+                                                      _refresh();
+                                                    },
+                                                    height: 47.0,
+                                                    minWidth: MediaQuery.of(context).size.width * 0.9,
+                                                    color: hex("#236DD0"),
+                                                    child: Text('Refresh',
+                                                                    style: TextStyle(color: hex("#FFFFFF"), fontSize: 14.0, fontWeight: FontWeight.w500, letterSpacing: 0.5),
+                                                                  ),                                                   
+                                                    ),
                                                 ),
-                                                // snapshot.data[index].doctor
-                                                // InkWell(
-                                                //   child: PersonCard(title: 'Dr. Livingstone', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
-                                                //   onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalHistoryTabs() )); },
-                                                //   ),
-                                                // PersonCard(title: 'Dr. Somto', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
-                                                // PersonCard(title: 'Dr. Stanley', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
-                                                // PersonCard(title: 'Dr. Isah', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
-                                                // PersonCard(title: 'Dr. Jules', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
-                                                // PersonCard(title: 'Dr. Jules', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
-                                                // PersonCard(title: 'Dr. Jules', imageUrl: "images/booked_appointment_image.png", rightSubTitle: 'June 12',),
-                                              ],
-                                              ),
-                                          ))
-                                ),
+                                       ),
+                              ],
+                            ),
+                      ),
                     ),
                   )
                 )

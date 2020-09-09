@@ -17,6 +17,15 @@ class ChiefComplain extends StatefulWidget {
 }
 
 class _ChiefComplainState extends State<ChiefComplain> {
+  var _complaints;
+
+  @override
+  void initState() { 
+    super.initState();
+    _complaints = _getCheifComplaint();
+  }
+
+
   // Methods Initialization
   _getCheifComplaint() async{
     var _token = await getToken();
@@ -46,93 +55,126 @@ class _ChiefComplainState extends State<ChiefComplain> {
     }
   }
 
-  @override
-  void initState() { 
-    super.initState();
-    // _getCheifComplaint();
+
+  Future<void> _refresh(){
+    setState(() {
+      _complaints = _getCheifComplaint();
+    });
   }
+
   @override
   Widget build(BuildContext context) {
 
-    return Container(
-                padding: EdgeInsets.only(top:5),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [hex("#1A1CF8"), hex("#2575FC").withOpacity(1.0)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight
-                    ),
-                  image: DecorationImage(image: AssetImage("images/screenshot.png"), fit: BoxFit.fill)
-                ),
-                child: Scaffold(
-                  extendBodyBehindAppBar: true,
-                  resizeToAvoidBottomInset: true,
-                  backgroundColor: Colors.transparent,
-                  body: SafeArea(
-                          child: Container(
-                          padding: EdgeInsets.only(top: 30, ),
-                          width: MediaQuery.of(context).size.width * 1,
-                          height: MediaQuery.of(context).size.height * 1,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
-                            ),
-                          child: SingleChildScrollView(
-                                  child: Center(
-                                    child: Padding(
-                                          padding: EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 20.0),
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: Container(
+                  padding: EdgeInsets.only(top:5),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [hex("#1A1CF8"), hex("#2575FC").withOpacity(1.0)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight
+                      ),
+                    image: DecorationImage(image: AssetImage("images/screenshot.png"), fit: BoxFit.fill)
+                  ),
+                  child: Scaffold(
+                    extendBodyBehindAppBar: true,
+                    resizeToAvoidBottomInset: true,
+                    backgroundColor: Colors.transparent,
+                    body: SafeArea(
+                            child: Container(
+                            padding: EdgeInsets.only(top: 30, ),
+                            width: MediaQuery.of(context).size.width * 1,
+                            height: MediaQuery.of(context).size.height * 1,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
+                              ),
+                            child: SingleChildScrollView(
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              // ComplaintCard(),
-                                              // ComplaintCard(),
-                                              // ComplaintCard(),
-                                              // ComplaintCard(),
-                                              // ComplaintCard(),
-                                              // ComplaintCard(),
-                                              // ComplaintCard(),
-                                              // ComplaintCard(),
-                                              
-                                               // SetUp a Future Builder
-                                                FutureBuilder(
-                                                    future: _getCheifComplaint(),
-                                                    builder: (BuildContext context, snapshot){
-                                                      try {
-                                                          if(snapshot.connectionState == ConnectionState.done){
-                                                            if(snapshot.data.length != 0) {
-                                                                return ListView.builder(
-                                                                    itemCount: snapshot.data.length,
-                                                                    scrollDirection: Axis.vertical,
-                                                                    shrinkWrap: true,
-                                                                    itemBuilder: (BuildContext context, int index){
-                                                                      return ComplaintCard(text: snapshot.data[index].details, createdAt: snapshot.data[index].createdAt, doctor: snapshot.data[index].doctor,);
-                                                                    },
-                                                                  );
-                                                            }else{
-                                                              return Text('No Complaint History');
-                                                            }
-                                                        } else {
-                                                          return Container(
-                                                                    height: MediaQuery.of(context).size.height * 0.6,
-                                                                    child:SpinKitWave(size: 30.0, color: hex("#1A1CF8"),)
-                                                                    );
-                                                        }
-                                                      } catch (e) {
-                                                          print(e);
-                                                          return Text('Network Error!');
-                                                      }
-                                                    } 
-                                                  ),
-                                            ],
-                                          )
-                                    ),
-                                  ),
-                         ),
-                    ),
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    SingleChildScrollView(
+                                            child: Center(
+                                              child: Padding(
+                                                    padding: EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 20.0),
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: <Widget>[
+                                                        // ComplaintCard(),
+                                                        // ComplaintCard(),
+                                                        // ComplaintCard(),
+                                                        // ComplaintCard(),
+                                                        // ComplaintCard(),
+                                                        // ComplaintCard(),
+                                                        // ComplaintCard(),
+                                                        // ComplaintCard(),
+                                                        
+                                                         // SetUp a Future Builder
+                                                          FutureBuilder(
+                                                              future: _complaints,
+                                                              builder: (BuildContext context, snapshot){
+                                                                try {
+                                                                    if(snapshot.connectionState == ConnectionState.done){
+                                                                      if(snapshot.data.length != 0) {
+                                                                          return ListView.builder(
+                                                                              itemCount: snapshot.data.length,
+                                                                              scrollDirection: Axis.vertical,
+                                                                              shrinkWrap: true,
+                                                                              itemBuilder: (BuildContext context, int index){
+                                                                                return ComplaintCard(text: snapshot.data[index].details, createdAt: snapshot.data[index].createdAt, doctor: snapshot.data[index].doctor,);
+                                                                              },
+                                                                            );
+                                                                      }else{
+                                                                        return Text('No Complaint History');
+                                                                      }
+                                                                  } else {
+                                                                    return Container(
+                                                                              height: MediaQuery.of(context).size.height * 0.6,
+                                                                              child:SpinKitWave(size: 30.0, color: hex("#1A1CF8"),)
+                                                                              );
+                                                                  }
+                                                                } catch (e) {
+                                                                    print(e);
+                                                                    return Text('Network Error!');
+                                                                }
+                                                              } 
+                                                            ),
+                                                      ],
+                                                    )
+                                              ),
+                                            ),
+                           ),
+
+
+                                Padding(
+                                    padding: const EdgeInsets.only(bottom: 10.0),
+                                    child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(22.0),
+                                            child: MaterialButton(
+                                              disabledColor: Colors.blue[200],
+                                              onPressed: (){
+                                                _refresh();
+                                              },
+                                              height: 47.0,
+                                              minWidth: MediaQuery.of(context).size.width * 0.9,
+                                              color: hex("#236DD0"),
+                                              child: Text('Refresh',
+                                                              style: TextStyle(color: hex("#FFFFFF"), fontSize: 14.0, fontWeight: FontWeight.w500, letterSpacing: 0.5),
+                                                            ),                                                   
+                                              ),
+                                          ),
+                                        ),
+                                  ],
+                                ),
+                            ),
+                            
+                      ),
+                    )
                   )
-                )
-              );
+                ),
+    );
   }
 }
 

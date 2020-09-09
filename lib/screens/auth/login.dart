@@ -215,6 +215,7 @@ class _LoginState extends State<Login> {
                                                               print(res);
                                                               print(res["message"]);
                                                               if(res['code'] == 0){
+                                                                print(jsonData);
                                                                   setState(() {
                                                                     _loading = false;
                                                                     _username = '';
@@ -222,7 +223,7 @@ class _LoginState extends State<Login> {
                                                                   });
                                                                   // Display success snackbar
                                                                   // print(res);
-                                                                  // Scaffold.of(innerContext).showSnackBar(SnackBar(content: Text(res['message']), backgroundColor: Colors.blueAccent,));
+                                                                  Scaffold.of(innerContext).showSnackBar(SnackBar(content: Text(res['message']), backgroundColor: Colors.blueAccent,));
                                                                   // // SAVE USER DATA AND TOKEN TO SHARED PREFERENCES
                                                                   // setToken(res['token']);
                                                                   // setUserData(res['user']);
@@ -231,7 +232,7 @@ class _LoginState extends State<Login> {
                                                                   if(res['user']['roles'][1] == 'PATIENT'){
                                                                     
                                                                     // NAVIGATE TO HOME PAGE
-                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainTabView() ));
+                                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainTabView() ));
                                                                     // SAVE USER DATA AND TOKEN TO SHARED PREFERENCES
                                                                     setToken(res['token']);
                                                                     setUserData(jsonEncode(res['user']));

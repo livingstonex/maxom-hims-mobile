@@ -27,7 +27,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    retrieveCalendars();
+    // retrieveCalendars();
   }
 
   @override
@@ -103,7 +103,8 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                                             child: MaterialButton(
                                                               disabledColor: Colors.indigo[400],
                                                               onPressed: () { 
-                                                                
+                                                                retrieveCalendars();
+                                                                addCalendars();
                                                               // print(event.description);
                                                               },
                                                               height: 47.0,

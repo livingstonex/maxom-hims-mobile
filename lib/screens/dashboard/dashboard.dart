@@ -26,11 +26,15 @@ class _HomeState extends State<Home> {
   final AsyncMemoizer _memoizer = new AsyncMemoizer();
   final AsyncMemoizer _memoizer_mem = new AsyncMemoizer();
   Future _future;
+  var _prescription;
+  var _appointments;
 
   @override
   void initState() { 
     super.initState();
     _getUser();
+    _prescription = _getPrescription();
+    _appointments = _getAppointments();
   }
 
 
@@ -58,7 +62,6 @@ class _HomeState extends State<Home> {
         // var _user = jsonDecode(await getUserData())['id'];
         
         // Define remote url
-
         var _url = "api/user/patientappointment/" + _userId.toString();
         print(_url);
         HttpService service = HttpService();
@@ -114,7 +117,41 @@ class _HomeState extends State<Home> {
   });
   }
 
-      
+  // _onBackPressed function to handle back navigation
+  Future<bool> _onBackPressed(){
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Are you sure?'),
+          content: Text('You are going to exit the application!'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('No'),
+              onPressed: (){
+                Navigator.of(context).pop(false);
+              },
+            ),
+
+            FlatButton(
+              child: Text('Yes'),
+              onPressed: (){
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Future<void> _refresh() async{
+    setState(() {
+      _prescription = _getPrescription();
+      _appointments = _getAppointments();
+    });
+    print('refresh');
+  } 
   @override
   Widget build(BuildContext context) {
     final blood_pressure_card = Container(
@@ -383,228 +420,233 @@ class _HomeState extends State<Home> {
                                       ),
                                     );
 
-    return Container(
-                      decoration: BoxDecoration(
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+          child: RefreshIndicator(
+            onRefresh: _refresh,
+            backgroundColor: Colors.purple[700],
+            color: Colors.white,
+            displacement: 100.0,
+            child: Container(
+                        decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [hex("#1A1CF8"), hex("#2575FC").withOpacity(1.0)],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight
                           ),
-                        image: DecorationImage(image: AssetImage("images/screenshot.png"), fit: BoxFit.fill)
-                      ),
-                      child: Scaffold(
-                        resizeToAvoidBottomInset: true,
-                        backgroundColor: Colors.transparent,
-                        body: SafeArea(
-                            child: Center(
-                                  child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    // Welcome Text
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 18),
-                                      child: Column(
+                            image: DecorationImage(image: AssetImage("images/screenshot.png"), fit: BoxFit.fill)
+                          ),
+                          child: Scaffold(
+                            resizeToAvoidBottomInset: true,
+                            backgroundColor: Colors.transparent,
+                            body: Container(
+                                  child: SafeArea(
+                                  child: Center(
+                                        child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
-                                              Text("Welcome", style: TextStyle(color: Colors.white, fontSize: 18.0, fontFamily: "Museo Sans", fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
-                                              SizedBox(height: 10,),
-                                              Text('${lastName} ${firstName}', style: TextStyle(color: Colors.white, fontSize: 18.0, fontFamily: "Museo Sans", fontWeight: FontWeight.w600, fontStyle: FontStyle.normal),),
-                                              SizedBox(height: 20,),
-                                                ],
-                                              ),
-                                      ),
-                                  
-                                    // White Curve Container
-                                    Container(
-                                            padding: EdgeInsets.only(top: 30, ),
-                                            width: MediaQuery.of(context).size.width * 1,
-                                            height: MediaQuery.of(context).size.height * 0.70,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
-                                              ),
-                                            child: SingleChildScrollView(
-                                                      child: RefreshIndicator(
-                                                              onRefresh: (){
-                                                                return _getAppointments();
-                                                              },
-                                                              strokeWidth: 5.0,
+                                          // Welcome Text
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 18),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                    Text("Welcome", style: TextStyle(color: Colors.white, fontSize: 18.0, fontFamily: "Museo Sans", fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
+                                                    SizedBox(height: 10,),
+                                                    Text('${lastName} ${firstName}', style: TextStyle(color: Colors.white, fontSize: 18.0, fontFamily: "Museo Sans", fontWeight: FontWeight.w600, fontStyle: FontStyle.normal),),
+                                                    SizedBox(height: 20,),
+                                                      ],
+                                                    ),
+                                            ),
+                                        
+                                          // White Curve Container
+                                          Container(
+                                                  padding: EdgeInsets.only(top: 30, ),
+                                                  width: MediaQuery.of(context).size.width * 1,
+                                                  height: MediaQuery.of(context).size.height * 0.70,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
+                                                    ),
+                                                  child: SingleChildScrollView(
+                                                                    child: Padding(
+                                                                    padding: EdgeInsets.only(left:10, top:25, right:10, bottom: 30),
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: <Widget>[
+                                                                        // Medications Text Header
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: <Widget>[
+                                                                            Column(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: <Widget>[
+                                                                                  Text('Medications', style: TextStyle(color:hex("#4A4A4A"), fontFamily: "Museo Sans", fontSize: 16.0, fontWeight: FontWeight.w600 ),),
+                                                                                  SizedBox(height: 10,),
+                                                                                  Text('Todays dosage and reminder', style: TextStyle(color:hex("#4F4B4B"), fontFamily: "Museo Sans", fontSize: 10.0, fontWeight: FontWeight.w600 ),)
+                                                                              ],
+                                                                            ),
 
-                                                              child: Padding(
-                                                              padding: EdgeInsets.only(left:10, top:25, right:10, bottom: 30),
-                                                              child: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: <Widget>[
-                                                                  // Medications Text Header
-                                                                  Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: <Widget>[
-                                                                      Column(
-                                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                                        children: <Widget>[
-                                                                            Text('Medications', style: TextStyle(color:hex("#4A4A4A"), fontFamily: "Museo Sans", fontSize: 16.0, fontWeight: FontWeight.w600 ),),
-                                                                            SizedBox(height: 10,),
-                                                                            Text('Todays dosage and reminder', style: TextStyle(color:hex("#4F4B4B"), fontFamily: "Museo Sans", fontSize: 10.0, fontWeight: FontWeight.w600 ),)
-                                                                        ],
-                                                                      ),
+                                                                            Text('View all', style: TextStyle(color:hex("#4F4B4B"), fontFamily: "Museo Sans", fontSize: 10.0, fontWeight: FontWeight.w600 ),)
+                                                                          ],
+                                                                        ),
+                                                                        SizedBox(height: 20,),
 
-                                                                      Text('View all', style: TextStyle(color:hex("#4F4B4B"), fontFamily: "Museo Sans", fontSize: 10.0, fontWeight: FontWeight.w600 ),)
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 20,),
-
-                                                                  // SetUp a Future Builder for Drug List
-                                                                  FutureBuilder(
-                                                                      future: _getPrescription(),
-                                                                      builder: (BuildContext context, snapshot){
-                                                                        try {
-                                                                            if(snapshot.connectionState == ConnectionState.done){
-                                                                              if(snapshot.data.length != 0) {
-                                                                                  return Container(
-                                                                                          height: 85,
-                                                                                          child: ListView.builder(
-                                                                                                  itemCount: snapshot.data.length,
+                                                                        // SetUp a Future Builder for Drug List
+                                                                        FutureBuilder(
+                                                                            future: _prescription,
+                                                                            builder: (BuildContext context, snapshot){
+                                                                              try {
+                                                                                  if(snapshot.connectionState == ConnectionState.done){
+                                                                                    if(snapshot.data.length != 0) {
+                                                                                        return Container(
+                                                                                                height: 85,
+                                                                                                child: ListView.builder(
+                                                                                                        itemCount: snapshot.data.length,
+                                                                                                        scrollDirection: Axis.horizontal,
+                                                                                                        shrinkWrap: true,
+                                                                                                        itemBuilder: (BuildContext context, int index){
+                                                                                                          // print(snapshot.data[index]['startDate']);
+                                                                                                          return InkWell(
+                                                                                                            child: MedicineCard(imageUrl: "images/drug.png", title: '${snapshot.data[index]['medicine']}', subTitle: snapshot.data[index]['startDate']),
+                                                                                                            // PersonCard(subTitle: "${snapshot.data[index].medicine}",),
+                                                                                                            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => PrescriptionDetails(data: snapshot.data[index],) )); },
+                                                                                                            );
+                                                                                                        },
+                                                                                                      ),
+                                                                                        );
+                                                                                    }else{
+                                                                                      return Text('No Complaint History');
+                                                                                    }
+                                                                                } else {
+                                                                                  return  Container(
+                                                                                                height: 85,
+                                                                                                child: ListView(
                                                                                                   scrollDirection: Axis.horizontal,
+                                                                                                  children: <Widget>[
+                                                                                                    DrugListhimmer(),
+                                                                                                    DrugListhimmer(),
+                                                                                                    DrugListhimmer(),
+                                                                                                  ],
+                                                                                                )
+                                                                                              );
+                                                                                                              }
+                                                                              } catch (e) {
+                                                                                  print(e);
+                                                                                  return Text('Network Error!');
+                                                                              }
+                                                                            } 
+                                                                          ),
+                                                                       
+                                                                        SizedBox(height: 20,),
+                                                                         // Booked Appointment Text Header
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: <Widget>[
+                                                                            Text('Booked Appointment', style: TextStyle(color:hex("#4A4A4A"), fontFamily: "Museo Sans", fontSize: 16.0, fontWeight: FontWeight.w600 ),),
+                                                                            Text('View all', style: TextStyle(color:hex("#4F4B4B"), fontFamily: "Museo Sans", fontSize: 10.0, fontWeight: FontWeight.w600 ),)
+                                                                          ],
+                                                                        ),
+                                                                        SizedBox(height: 20,),
+                                                                        // Booked Appointment Cards
+                                                                        // booked_appointment_card,
+                                                                        // booked_appointment_card,
+
+                                                                        // SetUp a Future Builder
+                                                                        FutureBuilder(
+                                                                            // initialData: {},
+                                                                            future: _appointments,
+                                                                            builder: (BuildContext context, snapshot){
+                                                                              // try {
+                                                                                if(snapshot.connectionState == ConnectionState.done){
+                                                                                  if(snapshot.hasError){
+                                                                                    return NetworkErrorShimmer();
+                                                                                    // Container( child: Text('Error Loading, Refresh!'), );
+                                                                                  } else {
+                                                                                      if(snapshot.data != null){
+                                                                                              return ListView.builder(
+                                                                                                  itemCount: snapshot.data.length,
+                                                                                                  scrollDirection: Axis.vertical,
                                                                                                   shrinkWrap: true,
                                                                                                   itemBuilder: (BuildContext context, int index){
-                                                                                                    // print(snapshot.data[index]['startDate']);
-                                                                                                    return InkWell(
-                                                                                                      child: MedicineCard(imageUrl: "images/drug.png", title: '${snapshot.data[index]['medicine']}', subTitle: snapshot.data[index]['startDate']),
-                                                                                                      // PersonCard(subTitle: "${snapshot.data[index].medicine}",),
-                                                                                                      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => PrescriptionDetails(data: snapshot.data[index],) )); },
-                                                                                                      );
+                                                                                                    // AppointmentCard(confirmed: snapshot.data[index]['confirmed'], dateTime: snapshot.data[index]['dateTime'],),
+                                                                                                    return 
+                                                                                                    InkWell(
+                                                                                                                child: AppointmentCard(confirmed: snapshot.data[index]['confirmed'], dateTime: snapshot.data[index]['dateTime'],),
+                                                                                                                onTap: (){
+                                                                                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetails(data: snapshot.data[index],)));
+                                                                                                              });
                                                                                                   },
-                                                                                                ),
-                                                                                  );
-                                                                              }else{
-                                                                                return Text('No Complaint History');
-                                                                              }
-                                                                          } else {
-                                                                            return  Container(
-                                                                                          height: 85,
-                                                                                          child: ListView(
-                                                                                            scrollDirection: Axis.horizontal,
-                                                                                            children: <Widget>[
-                                                                                              DrugListhimmer(),
-                                                                                              DrugListhimmer(),
-                                                                                              DrugListhimmer(),
-                                                                                            ],
-                                                                                          )
-                                                                                        );
-                                                                                                        }
-                                                                        } catch (e) {
-                                                                            print(e);
-                                                                            return Text('Network Error!');
-                                                                        }
-                                                                      } 
+                                                                                                );
+                                                                                    }else{ return Text('No appointments'); }
+                                                                                    
+                                                                                  }
+                                                                                } else {
+                                                                                  return Container(
+                                                                                            height: MediaQuery.of(context).size.height * 0.2,
+                                                                                            child: DashboardShimmer(),
+                                                                                            // SpinKitWave(size: 30.0, color: hex("#1A1CF8"),)
+                                                                                            );
+                                                                                }
+                                                                              // } catch (e) {
+                                                                              //     print(e);
+                                                                              //     return Text('Network Error!');
+                                                                              // }
+                                                                            } 
+                                                                          ),
+                                                                        SizedBox(height: 10,),
+                                                                        // Three Blue Dots
+                                                                        Center(
+                                                                          child: three_dots,
+                                                                        ),
+                                                                        SizedBox(height: 17,),
+                                                                        Divider(color: Color.fromRGBO(176, 190, 197, 0.31),),
+                                                                        SizedBox(height: 20,), 
+                                                                        // Health Records Header Text Row
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: <Widget>[
+                                                                            Text('Health Record', style: TextStyle(color:hex("#4A4A4A"), fontFamily: "Museo Sans", fontSize: 16.0, fontWeight: FontWeight.w700 ),),
+                                                                            Text('View all', style: TextStyle(color:hex("#4F4B4B"), fontFamily: "Museo Sans", fontSize: 10.0, fontWeight: FontWeight.w700 ),)
+                                                                          ],
+                                                                        ),
+                                                                        SizedBox(height: 20,),
+                                                                        // Blood Pressure and HeartBeat Row
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: <Widget>[
+                                                                            blood_pressure_card,
+                                                                            heartbeat_card,
+                                                                          ],
+                                                                        ),
+
+                                                                        SizedBox(height: 10,),
+
+                                                                        // Water and Shuga Row
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: <Widget>[
+                                                                            water_card,
+                                                                            sugar_card,
+                                                                          ],
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                 
-                                                                  SizedBox(height: 20,),
-                                                                   // Booked Appointment Text Header
-                                                                  Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: <Widget>[
-                                                                      Text('Booked Appointment', style: TextStyle(color:hex("#4A4A4A"), fontFamily: "Museo Sans", fontSize: 16.0, fontWeight: FontWeight.w600 ),),
-                                                                      Text('View all', style: TextStyle(color:hex("#4F4B4B"), fontFamily: "Museo Sans", fontSize: 10.0, fontWeight: FontWeight.w600 ),)
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 20,),
-                                                                  // Booked Appointment Cards
-                                                                  // booked_appointment_card,
-                                                                  // booked_appointment_card,
-
-                                                                  // SetUp a Future Builder
-                                                                  FutureBuilder(
-                                                                      // initialData: {},
-                                                                      future: _getAppointments(),
-                                                                      builder: (BuildContext context, snapshot){
-                                                                        // try {
-                                                                          if(snapshot.connectionState == ConnectionState.done){
-                                                                            if(snapshot.hasError){
-                                                                              return NetworkErrorShimmer();
-                                                                              // Container( child: Text('Error Loading, Refresh!'), );
-                                                                            } else {
-                                                                                if(snapshot.data != null){
-                                                                                        return ListView.builder(
-                                                                                            itemCount: snapshot.data.length,
-                                                                                            scrollDirection: Axis.vertical,
-                                                                                            shrinkWrap: true,
-                                                                                            itemBuilder: (BuildContext context, int index){
-                                                                                              // AppointmentCard(confirmed: snapshot.data[index]['confirmed'], dateTime: snapshot.data[index]['dateTime'],),
-                                                                                              return 
-                                                                                              InkWell(
-                                                                                                          child: AppointmentCard(confirmed: snapshot.data[index]['confirmed'], dateTime: snapshot.data[index]['dateTime'],),
-                                                                                                          onTap: (){
-                                                                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetails(data: snapshot.data[index],)));
-                                                                                                        });
-                                                                                            },
-                                                                                          );
-                                                                              }else{ return Text('No appointments'); }
-                                                                              
-                                                                            }
-                                                                          } else {
-                                                                            return Container(
-                                                                                      height: MediaQuery.of(context).size.height * 0.2,
-                                                                                      child: DashboardShimmer(),
-                                                                                      // SpinKitWave(size: 30.0, color: hex("#1A1CF8"),)
-                                                                                      );
-                                                                          }
-                                                                        // } catch (e) {
-                                                                        //     print(e);
-                                                                        //     return Text('Network Error!');
-                                                                        // }
-                                                                      } 
-                                                                    ),
-                                                                  SizedBox(height: 10,),
-                                                                  // Three Blue Dots
-                                                                  Center(
-                                                                    child: three_dots,
-                                                                  ),
-                                                                  SizedBox(height: 17,),
-                                                                  Divider(color: Color.fromRGBO(176, 190, 197, 0.31),),
-                                                                  SizedBox(height: 20,), 
-                                                                  // Health Records Header Text Row
-                                                                  Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: <Widget>[
-                                                                      Text('Health Record', style: TextStyle(color:hex("#4A4A4A"), fontFamily: "Museo Sans", fontSize: 16.0, fontWeight: FontWeight.w700 ),),
-                                                                      Text('View all', style: TextStyle(color:hex("#4F4B4B"), fontFamily: "Museo Sans", fontSize: 10.0, fontWeight: FontWeight.w700 ),)
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 20,),
-                                                                  // Blood Pressure and HeartBeat Row
-                                                                  Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: <Widget>[
-                                                                      blood_pressure_card,
-                                                                      heartbeat_card,
-                                                                    ],
-                                                                  ),
-
-                                                                  SizedBox(height: 10,),
-
-                                                                  // Water and Shuga Row
-                                                                  Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: <Widget>[
-                                                                      water_card,
-                                                                      sugar_card,
-                                                                    ],
-                                                                  ),
-                                                                ],
                                                               ),
-                                                        ),
-                                                      ),
-                                                    )
-                                            ),
-                                  ],
-                                ),
+                                                            
+                                                          )
+                                                  ),
+                                        ],
+                                      ),
+                                    ),
                               ),
-                        )
-                      )
-                    );
+                            )
+                          )
+                        ),
+          ),
+    );
   }
 }
 

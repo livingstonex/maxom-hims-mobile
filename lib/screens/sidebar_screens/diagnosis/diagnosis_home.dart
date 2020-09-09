@@ -15,7 +15,13 @@ class Diagnoses extends StatefulWidget {
 }
 
 class _DiagnosesState extends State<Diagnoses> {
+  var _diagnosis;
 
+  @override
+  void initState() { 
+    super.initState();
+    _diagnosis = _getDiagnosis();
+  }
   // Methods Initialization
   _getDiagnosis() async{
     var _token = await getToken();
@@ -44,6 +50,15 @@ class _DiagnosesState extends State<Diagnoses> {
       print(e);
     }
   }
+
+  // Refresh Function
+  Future<void> _refresh(){
+    setState(() {
+      _diagnosis = _getDiagnosis();
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -75,7 +90,10 @@ class _DiagnosesState extends State<Diagnoses> {
                             color: Colors.white,
                             borderRadius: BorderRadius.only(topLeft: Radius.circular(32.0), topRight: Radius.circular(32.0))
                             ),
-                          child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              SingleChildScrollView(
                                   child: Center(
                                     child: Padding(
                                       padding: EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 20.0),
@@ -143,7 +161,7 @@ class _DiagnosesState extends State<Diagnoses> {
                                         // SetUp a Future Builder
 
                                         FutureBuilder(
-                                            future: _getDiagnosis(),
+                                            future: _diagnosis,
                                             builder: (BuildContext context, snapshot){
                                               try {
                                                   if(snapshot.connectionState == ConnectionState.done){
@@ -182,6 +200,28 @@ class _DiagnosesState extends State<Diagnoses> {
                                     ),
                                   ),
                          ),
+
+                          // Refresh Button
+                           Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(22.0),
+                                          child: MaterialButton(
+                                            disabledColor: Colors.blue[200],
+                                            onPressed: (){
+                                              _refresh();
+                                            },
+                                            height: 47.0,
+                                            minWidth: MediaQuery.of(context).size.width * 0.9,
+                                            color: hex("#236DD0"),
+                                            child: Text('Refresh',
+                                                            style: TextStyle(color: hex("#FFFFFF"), fontSize: 14.0, fontWeight: FontWeight.w500, letterSpacing: 0.5),
+                                                          ),                                                   
+                                            ),
+                                        ),
+                                ),
+                            ],
+                          )
                     ),
                   )
                 )

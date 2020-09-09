@@ -308,7 +308,7 @@ class _SignUpState extends State<SignUp> {
                                                                         print(res['message']);
                                                                         res.isNotEmpty ? setState((){loading = false;}) : "";
                                                                         if(res['code'] == 0){
-                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+                                                                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Login()));
                                                                         }else{
                                                                           Scaffold.of(innerContext).showSnackBar(SnackBar(content: Text(res['message']), backgroundColor: Colors.blueAccent,));
                                                                         }

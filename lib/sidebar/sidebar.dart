@@ -119,7 +119,11 @@ class _SideNavDrawerState extends State<SideNavDrawer> {
                           title: Text('Log Out', style: TextStyle(color: hex('#FDFAFA'), fontSize: 12.0, fontFamily: "Museo Sans", fontWeight: FontWeight.w500),),
                           onTap: () {
                             logOut();
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Login() ));
+                            Navigator.pushAndRemoveUntil(
+                              context, 
+                              MaterialPageRoute(builder: (BuildContext context) => Login(), ),
+                              (route) => false,
+                              );
                           },
                         ),
                       ],

@@ -60,7 +60,7 @@ class _AccountHistoryState extends State<AccountHistory> {
     var _url = "api/accountant/transactionsbypatient/" + _userId.toString();
     print(_url);
     HttpService service = HttpService();
-    try {
+    try {     
       var res = await service.getRequest(_url, _token);
       List<Data> accountHistoryData = [];
       for (var u in res) {

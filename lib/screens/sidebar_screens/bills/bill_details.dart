@@ -11,7 +11,7 @@ import 'package:flutter_paystack/flutter_paystack.dart';
 class BillDetails extends StatefulWidget {
   var balance;
   var data;
-  BillDetails({Key key, this.balance}): super(key: key);
+  BillDetails({Key key, this.balance, this.data}): super(key: key);
 
   @override
   _BillDetailsState createState() => _BillDetailsState();
@@ -19,8 +19,9 @@ class BillDetails extends StatefulWidget {
 
 class _BillDetailsState extends State<BillDetails> {
   var publicKey = 'pk_test_7b545e0d7a1aaa0e39782e7d5aa7e9595a8082fc';
-  var _hmos = ['AXA', 'Mansard'];
-  var _selectedItem = 'AXA';
+  List _hmos = [];
+  var _selectedItem;
+  var _policy;
 
   @override
   void initState() {
@@ -28,18 +29,33 @@ class _BillDetailsState extends State<BillDetails> {
     super.initState();
     PaystackPlugin.initialize(publicKey: publicKey);
     _getHMOList();
+    // print(widget.data);
   }
+    
 
   // Pay specific bill
   _payBill() async{
-    _backendVerify();
-    // var drBal = widget.balance.ceil();
-    // // print(drBal.runtimeType);
+    // _backendVerify();
+    var drBal = widget.balance.ceil();
+
+    // Calculate this discount based on if HMO is selected
+      // First check that _policy is not null
+      if(_policy != null){
+        print('Policy discount is not null');
+      }
+      
+    // // Get User Email
+    // var _userEmail = jsonDecode(await getUserData())['email'];
+    // print(_userEmail);
+
+    // // Create a Charge Object
     // Charge charge = Charge()
     //        ..amount = 10000
-    //        ..reference = '12345678'
-    //        ..email = 'patient@email.com';
+    //       //  Replace reference with widget.data['refNo']
+    //        ..reference = '1234567'
+    //        ..email = _userEmail;
 
+    // // Create the CheckoutResponse (i.e actual payment)
     // CheckoutResponse response = await PaystackPlugin.checkout(
     //   context, 
     //   charge: charge,
@@ -51,7 +67,8 @@ class _BillDetailsState extends State<BillDetails> {
     //   print(response.message.runtimeType);
 
     //   if (response.message == 'Success') {
-        
+    //       print(response);
+    //       _backendVerify();
     //     // Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); 
     //   }
   }
@@ -72,11 +89,13 @@ class _BillDetailsState extends State<BillDetails> {
     var _url = "api/accountant/paybill";
     Map data = {
                 "amount": 100,
-                "billIds" : [8, 7, 20],
+                "billIds" : [widget.data['id']],
                 "patientId": _userId,
-                "item": "title",
+                "item": widget.data['item'],
                 "breakdown": {
-                  
+                  "card": true,
+                  "cardAmount": widget.data['dr'],
+                  "cardBankId": 0,
                 }
               }; 
     
@@ -144,17 +163,28 @@ class _BillDetailsState extends State<BillDetails> {
 
                                                 DropdownButton(
                                                     items: _hmos.map((dropdownItem){
-                                                      return DropdownMenuItem<String>(
-                                                        value: dropdownItem,
-                                                        child: Text(dropdownItem)
-                                                      );
+                                                      // print(_hmos[1]['insurancePolicy']['title']);
+                                                      // print(dropdownItem['insurancePolicy']['title']);
+                                                      return DropdownMenuItem(
+                                                        value: dropdownItem['id'],
+                                                        child: Text(dropdownItem['insurancePolicy']['title']),
+                                                        onTap: (){
+                                                          print(dropdownItem['insurancePolicy']);
+                                                          setState(() {
+                                                            _policy = dropdownItem['insurancePolicy'];
+                                                          });
+                                                        },
+                                                        );
                                                     }).toList(),  
                                                     
-                                                    onChanged: (String newUserValue){
-                                                      _setSelectedHMO(newUserValue);
+                                                    onChanged: (value) {
+                                                      _setSelectedHMO(value);
                                                     },
+
                                                     value: _selectedItem,
                                                     dropdownColor: Colors.blue[300],
+                                                    isDense: true,
+                                                    hint: Text('Select HMO'),
                                                   ),
 
                                               ],
@@ -203,23 +233,37 @@ class _BillDetailsState extends State<BillDetails> {
               );
   }
 
-  // Function definition
-  void _setSelectedHMO(String selectedValue){
+  // Function definitions
+  void _setSelectedHMO(selectedValue){
     setState(() {
       _selectedItem = selectedValue;
     });
+
+    print(_policy['discount']);
   }
 
   _getHMOList() async{
     var _token = await getToken();
-    var _url = "api/accountant/allhmoaccount";
+    var _userID = jsonDecode(await getUserData())['id'];
+    var _url = "api/user/coveragebypatient/68";
     HttpService service = HttpService();
     var res = await service.getRequest(_url, _token);
-    
-    print(res);
-    // setState(() {
-    //   _hmos = res;
-    // });
+
+    // print(res);
+    setState(() {
+      _hmos = res;
+    });
+    return res;
   }
 
+}
+
+class Data {
+  final int id;
+  var insurancePolicy;
+  // final int discount;
+  // final int ceiling; 
+  Data(this.id, this.insurancePolicy, 
+  // this.discount, this.ceiling
+  );
 }

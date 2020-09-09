@@ -55,6 +55,7 @@ class _DoctorsReportState extends State<DoctorsReport> {
             pulseGraphData = res['pulse'].cast<double>();
             respGraphData = res['respiratory'].cast<double>();
           });
+          
           return res;
           // List<Data> appointmentData = [];
           // for (var u in res) {
@@ -65,6 +66,13 @@ class _DoctorsReportState extends State<DoctorsReport> {
           // print(appointmentData);
           // return appointmentData;
       });
+  }
+
+  Future<void> _refresh() async{
+    setState(() {
+      _getGraphData();
+      print('graph');
+    });
   }
       
   @override
@@ -291,8 +299,19 @@ class _DoctorsReportState extends State<DoctorsReport> {
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text('Syptoms', style: TextStyle(color: hex("#4F4B4B"), fontSize: 14.0, fontFamily: "Museo Sans", fontWeight: FontWeight.w700),),
+                                              InkWell(
+                                                child: Text('Refresh'),
+                                                onTap: (){
+                                                  _refresh();
+                                                },
+                                              )
+                                            ],
+                                          ),
                                           // Symptoms Text
-                                          Text('Syptoms', style: TextStyle(color: hex("#4F4B4B"), fontSize: 14.0, fontFamily: "Museo Sans", fontWeight: FontWeight.w700),),
                                           SizedBox(height: 10,),
                                           Text(
                                             'Asset tracking refers to the method of tracking physical assets, either by scanning barcode labels attached to the assets or by using tags using GPS, BLE or RFID which broadcast their location. These technologies can also be used for indoor tracking of persons wearing a talocation. These technologies can also be used for indoor tracking of persons wearing a tagg.', 
