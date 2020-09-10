@@ -37,27 +37,29 @@ class _BillDetailsState extends State<BillDetails> {
   _payBill() async{
     // _backendVerify();
     var drBal = widget.balance.ceil();
-    var bal = 1000;
+    var bal = 1000.0;
 
     // Calculate this discount based on if HMO is selected
       // First check that _policy is not null
       if(_policy != null){
         print('Policy discount is not null');
         var discountAmount = (_policy['discount'] / 100) * bal;
-        var finalAmount = bal - discountAmount;
-        print(finalAmount);
+        bal = bal - discountAmount;
+        print(bal);
       }
-      
+      // print(bal);
     // // Get User Email
-    // var _userEmail = jsonDecode(await getUserData())['email'];
+    var _userEmail = jsonDecode(await getUserData())['email'];
     // print(_userEmail);
 
-    // // Create a Charge Object
-    // Charge charge = Charge()
-    //        ..amount = 10000
-    //       //  Replace reference with widget.data['refNo']
-    //        ..reference = '1234567'
-    //        ..email = _userEmail;
+    // Create a Charge Object
+    Charge charge = Charge()
+           ..amount = bal.ceil() 
+          //  Replace reference with widget.data['refNo']
+           ..reference = '1234567'
+           ..email = _userEmail;
+    
+    print(charge.amount);
 
     // // Create the CheckoutResponse (i.e actual payment)
     // CheckoutResponse response = await PaystackPlugin.checkout(
