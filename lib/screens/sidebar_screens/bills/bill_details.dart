@@ -180,7 +180,7 @@ class _BillDetailsState extends State<BillDetails> {
                                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                 children: <Widget>[
                                                   Text('Laboratory Test', style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
-                                                  Text('June 12', style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
+                                                  Text(widget.data['createdAt'], style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
                                                 ],
                                               ),
                                               SizedBox(height: 30,),

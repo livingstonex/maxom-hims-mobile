@@ -234,9 +234,9 @@ Future<Null> _refresh() {
                                                 borderRadius: BorderRadius.circular(22.0),
                                                 child: MaterialButton(
                                                   disabledColor: Colors.blue[200],
-                                                  onPressed: allbills ? (){
+                                                  onPressed: (_bills == null)  ? null : (){
                                                     // Navigator.push(context, MaterialPageRoute(builder: (context) => AllBills() ));
-                                                  } : null,
+                                                  },
                                                   height: 47.0,
                                                   // minWidth: MediaQuery.of(context).,
                                                   minWidth: MediaQuery.of(context).size.width * 0.6,
