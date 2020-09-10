@@ -22,6 +22,7 @@ class _BillDetailsState extends State<BillDetails> {
   List _hmos = [];
   var _selectedItem;
   var _policy;
+  var _singleHMO;
 
   @override
   void initState() {
@@ -29,15 +30,16 @@ class _BillDetailsState extends State<BillDetails> {
     super.initState();
     PaystackPlugin.initialize(publicKey: publicKey);
     _getHMOList();
-    // print(widget.data);
+    // print(widget.data['refNo']);
   }
     
 
   // Pay specific bill
   _payBill() async{
-    // _backendVerify();
+    // print(_singleHMO['referenceNo']);
     var drBal = widget.balance.ceil();
     var bal = 1000.0;
+    bool hmo = false;
 
     // Calculate this discount based on if HMO is selected
       // First check that _policy is not null
@@ -45,6 +47,7 @@ class _BillDetailsState extends State<BillDetails> {
         print('Policy discount is not null');
         var discountAmount = (_policy['discount'] / 100) * bal;
         bal = bal - discountAmount;
+        hmo = true;
         print(bal);
       }
       // print(bal);
@@ -62,7 +65,7 @@ class _BillDetailsState extends State<BillDetails> {
     Charge charge = Charge()
            ..amount = bal.ceil() * 100
           //  Replace reference with widget.data['refNo']
-           ..reference = '123456788'
+           ..reference = '1234567888888888'
            ..email = _userEmail;
     
     print(charge.amount);
@@ -80,35 +83,18 @@ class _BillDetailsState extends State<BillDetails> {
 
     // Check response message and take action based on that
     if (response.message == 'Success') {
-        print(response);
-        // _backendVerify();
+        print('payment successful');
+        if((_policy != null) && (_singleHMO != null)){
+          _backendVerify(bal, response.reference, hmo, policyId: _policy['id'], hmoReferenceNo: _singleHMO['referenceNo']);
+          return;
+        }
+
+        _backendVerify(bal, response.reference, hmo);
       }
-
-    
-    // if(charge.amount < 100){
-    //    return showDialog(
-    //      context: context,
-    //      builder: (BuildContext context){
-    //        return AlertDialog(
-    //                 title: Text('Invalid Amount'),
-    //                 content: Text('Amount is not valid for payment!'),
-    //                 actions: <Widget>[
-    //                   FlatButton(
-    //                     child: Text('Ok'),
-    //                     onPressed: (){
-    //                       Navigator.of(context).pop(true);
-    //                     },
-    //                   ),
-    //                 ],
-    //               );
-    //         }
-    //      );
-    // }
-
   }
 
   // Backend Verification
-  _backendVerify() async{
+  _backendVerify(double amount, String reference, bool hmo, {int policyId, String hmoReferenceNo}) async{
     var _token = await getToken();
     var _encodedUser = await getUserData();
     var _decodedUser = jsonDecode(_encodedUser);
@@ -122,14 +108,18 @@ class _BillDetailsState extends State<BillDetails> {
     // Variable declarations
     var _url = "api/accountant/paybill";
     Map data = {
-                "amount": 100,
+                "amount": amount,
                 "billIds" : [widget.data['id']],
                 "patientId": _userId,
                 "item": widget.data['item'],
                 "breakdown": {
                   "card": true,
-                  "cardAmount": widget.data['dr'],
+                  "cardAmount": amount,
                   "cardBankId": 0,
+                  "cardRef": reference,
+                  "hmo":  hmo,
+                  "hmoPolicyId": (hmo && (policyId != null)) ? policyId : 0,
+                  "hmoRefNo": (hmo && (hmoReferenceNo != null)) ? hmoReferenceNo : ""
                 }
               }; 
     
@@ -210,6 +200,7 @@ class _BillDetailsState extends State<BillDetails> {
                                                           print(dropdownItem['insurancePolicy']);
                                                           setState(() {
                                                             _policy = dropdownItem['insurancePolicy'];
+                                                            _singleHMO = dropdownItem;
                                                           });
                                                         },
                                                         );
