@@ -30,6 +30,14 @@ class _OutstandingBillsState extends State<OutstandingBills> {
     _bills = _getOutstandingBills();
     PaystackPlugin.initialize(publicKey: publicKey);
   }
+
+  @override
+  void dispose() { 
+    setState(() {
+      allbills = false;
+    });
+    super.dispose();
+  }
   // Methods Initialization
   _getOutstandingBills() async{
     var _token = await getToken();
@@ -234,7 +242,7 @@ Future<Null> _refresh() {
                                                 borderRadius: BorderRadius.circular(22.0),
                                                 child: MaterialButton(
                                                   disabledColor: Colors.blue[200],
-                                                  onPressed: (_bills == null)  ? null : (){
+                                                  onPressed: !allbills ? null : (){
                                                     // Navigator.push(context, MaterialPageRoute(builder: (context) => AllBills() ));
                                                   },
                                                   height: 47.0,
