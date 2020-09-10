@@ -37,7 +37,7 @@ class _BillDetailsState extends State<BillDetails> {
   _payBill() async{
     // _backendVerify();
     var drBal = widget.balance.ceil();
-    var bal = 1000.0;
+    var bal = 100.0;
 
     // Calculate this discount based on if HMO is selected
       // First check that _policy is not null
@@ -52,31 +52,62 @@ class _BillDetailsState extends State<BillDetails> {
     var _userEmail = jsonDecode(await getUserData())['email'];
     // print(_userEmail);
 
+
+     // If bal is less than N100, you are still going to pay N100
+     if((bal.ceil()) < 100){
+       bal = 100;
+    }
+
     // Create a Charge Object
     Charge charge = Charge()
-           ..amount = bal.ceil() 
+           ..amount = bal.ceil() * 100
           //  Replace reference with widget.data['refNo']
-           ..reference = '1234567'
+           ..reference = '123456788'
            ..email = _userEmail;
     
     print(charge.amount);
+     
+   
 
-    // // Create the CheckoutResponse (i.e actual payment)
-    // CheckoutResponse response = await PaystackPlugin.checkout(
-    //   context, 
-    //   charge: charge,
-    //   method: CheckoutMethod.card,
-    //   );
+    // Make sure charge.amount is greater than or equal to 100, before proceeding to checkout
+    if(charge.amount >= 100){
+        // Create the CheckoutResponse (i.e actual payment)
+        CheckoutResponse response = await PaystackPlugin.checkout(
+          context, 
+          charge: charge,
+          method: CheckoutMethod.card,
+        );
 
-    //   print(response);
-    //   print(response.message);
-    //   print(response.message.runtimeType);
+        print(response);
+        print(response.message);
 
-    //   if (response.message == 'Success') {
-    //       print(response);
-    //       _backendVerify();
-    //     // Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); 
-    //   }
+        // Check response message and take action based on that
+          //   if (response.message == 'Success') {
+          //       print(response);
+          //       _backendVerify();
+          //    }
+    }
+    
+    // if(charge.amount < 100){
+    //    return showDialog(
+    //      context: context,
+    //      builder: (BuildContext context){
+    //        return AlertDialog(
+    //                 title: Text('Invalid Amount'),
+    //                 content: Text('Amount is not valid for payment!'),
+    //                 actions: <Widget>[
+    //                   FlatButton(
+    //                     child: Text('Ok'),
+    //                     onPressed: (){
+    //                       Navigator.of(context).pop(true);
+    //                     },
+    //                   ),
+    //                 ],
+    //               );
+    //         }
+    //      );
+    // }
+
   }
 
   // Backend Verification
@@ -111,6 +142,10 @@ class _BillDetailsState extends State<BillDetails> {
     // HttpService service = HttpService();
     //   var res = await service.postRequest(_url, _token, jsonData);
     //   print(res);
+    //   If res == success, navigate to the bill_success page
+    //   if(res.message == 'Success'){
+      //  Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); 
+    //   }
     //   return res;
   }
 
@@ -183,6 +218,13 @@ class _BillDetailsState extends State<BillDetails> {
                                                         );
                                                     }).toList(),  
                                                     
+                                                    /* 
+                                                      Remember to put the check for balance < 100, like  this:
+                                                      onChanged: (widget.balance < 100) ? null : (value) {
+                                                        _setSelectedHMO(value);
+                                                      },
+                                                     */
+
                                                     onChanged: (value) {
                                                       _setSelectedHMO(value);
                                                     },
@@ -191,6 +233,7 @@ class _BillDetailsState extends State<BillDetails> {
                                                     dropdownColor: Colors.blue[300],
                                                     isDense: true,
                                                     hint: Text('Select HMO'),
+                                                    disabledHint: Text('Disabled'),
                                                   ),
 
                                               ],
