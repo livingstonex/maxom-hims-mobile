@@ -37,7 +37,7 @@ class _BillDetailsState extends State<BillDetails> {
   _payBill() async{
     // _backendVerify();
     var drBal = widget.balance.ceil();
-    var bal = 100.0;
+    var bal = 1000.0;
 
     // Calculate this discount based on if HMO is selected
       // First check that _policy is not null
@@ -48,13 +48,13 @@ class _BillDetailsState extends State<BillDetails> {
         print(bal);
       }
       // print(bal);
-    // // Get User Email
+
+    // Get User Email
     var _userEmail = jsonDecode(await getUserData())['email'];
     // print(_userEmail);
 
-
-     // If bal is less than N100, you are still going to pay N100
-     if((bal.ceil()) < 100){
+    // If bal is less than N100, you are still going to pay N100
+    if((bal.ceil()) < 100){
        bal = 100;
     }
 
@@ -68,25 +68,22 @@ class _BillDetailsState extends State<BillDetails> {
     print(charge.amount);
      
    
+    // Create the CheckoutResponse (i.e actual payment)
+    CheckoutResponse response = await PaystackPlugin.checkout(
+      context, 
+      charge: charge,
+      method: CheckoutMethod.card,
+    );
 
-    // Make sure charge.amount is greater than or equal to 100, before proceeding to checkout
-    if(charge.amount >= 100){
-        // Create the CheckoutResponse (i.e actual payment)
-        CheckoutResponse response = await PaystackPlugin.checkout(
-          context, 
-          charge: charge,
-          method: CheckoutMethod.card,
-        );
+    print(response);
+    print(response.message);
 
+    // Check response message and take action based on that
+    if (response.message == 'Success') {
         print(response);
-        print(response.message);
+        // _backendVerify();
+      }
 
-        // Check response message and take action based on that
-          //   if (response.message == 'Success') {
-          //       print(response);
-          //       _backendVerify();
-          //    }
-    }
     
     // if(charge.amount < 100){
     //    return showDialog(
