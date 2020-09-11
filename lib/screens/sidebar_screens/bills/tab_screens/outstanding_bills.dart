@@ -23,6 +23,7 @@ class _OutstandingBillsState extends State<OutstandingBills> {
   var publicKey = 'pk_test_7b545e0d7a1aaa0e39782e7d5aa7e9595a8082fc';
   bool allbills = false;
   var _bills;
+  var _billzz;
 
   @override
   void initState() { 
@@ -54,6 +55,11 @@ class _OutstandingBillsState extends State<OutstandingBills> {
     var res = await service.getRequest(_url, _token);
     print(res);
     print(res.length);
+
+    setState(() {
+      _billzz = res;
+    });
+
     if(res.length > 0){
       setState(() {
         allbills = true;
@@ -139,10 +145,11 @@ class _OutstandingBillsState extends State<OutstandingBills> {
   }
 
 // Refresh Function
-Future<Null> _refresh() {
+Future<Null> _refresh() { 
   print('heyyy');
   setState(() {
     _bills = _getOutstandingBills();
+    allbills = false;
   });
 }
   @override
@@ -243,7 +250,7 @@ Future<Null> _refresh() {
                                                 child: MaterialButton(
                                                   disabledColor: Colors.blue[200],
                                                   onPressed: !allbills ? null : (){
-                                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => AllBills() ));
+                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => AllBills(data: _billzz,) ));
                                                   },
                                                   height: 47.0,
                                                   // minWidth: MediaQuery.of(context).,

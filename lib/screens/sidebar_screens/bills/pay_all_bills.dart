@@ -6,13 +6,32 @@ import './bill_success.dart';
 
 class AllBills extends StatefulWidget {
   final String total_balance;
-  AllBills({Key key, this.total_balance}): super(key: key);
+  var data;
+  AllBills({Key key, this.total_balance, this.data}): super(key: key);
 
   @override
   _BillDetailsState createState() => _BillDetailsState();
 }
 
 class _BillDetailsState extends State<AllBills> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(_calTotalBill(widget.data));
+    // print(widget.data[0]['item']);
+  }
+
+  // Method definitions
+  _calTotalBill(bills) {
+    var total = 0.0;
+    for (var u in bills){
+      total = total + u['dr'];
+    }
+
+    return total;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +73,49 @@ class _BillDetailsState extends State<AllBills> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: <Widget>[
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                children: <Widget>[
-                                                  Text('Laboratory Test', style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
-                                                  Text('June 12', style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
-                                                ],
+
+                                              // Container(
+                                              //   height: 40.0,
+                                              //   width: MediaQuery.of(context).size.width * 0.85,
+                                              //   decoration: BoxDecoration(
+                                              //     borderRadius: BorderRadius.circular(15),
+                                              //     color: Colors.red,
+                                              //     ),
+                                              //   child: Row(
+                                              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              //     children: <Widget>[
+                                              //       Text('Laboratory Test', style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
+                                              //       Text('June 12', style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
+                                              //     ],
+                                              //   ),
+                                              // ),
+
+                                              // ListView for the display of all the bills
+                                              Container(
+                                                width: MediaQuery.of(context).size.width * 0.85,
+                                                child: ListView.builder(
+                                                            itemCount: widget.data.length,
+                                                            scrollDirection: Axis.vertical,
+                                                            shrinkWrap: true,
+                                                            itemBuilder: (BuildContext context, int index){
+                                                              return  Container(
+                                                                              height: 40.0,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(15),
+                                                                                color: Colors.purple[200],
+                                                                                ),
+                                                                              child: Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                children: <Widget>[
+                                                                                  Text("${widget.data[index]['item']}", style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
+                                                                                  Text("${widget.data[index]['createdAt']}", style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
+                                                                                ],
+                                                                              ),
+                                                                            );
+                                                            },
+                                                          ),
                                               ),
+
                                               SizedBox(height: 80,),
                                               Image.asset('images/credit_card.png', ),
                                               SizedBox(height: 40,),
