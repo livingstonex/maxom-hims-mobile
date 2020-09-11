@@ -5,21 +5,22 @@ import './bill_success.dart';
 
 
 class AllBills extends StatefulWidget {
-  final String total_balance;
   var data;
-  AllBills({Key key, this.total_balance, this.data}): super(key: key);
+  AllBills({Key key, this.data}): super(key: key);
 
   @override
   _BillDetailsState createState() => _BillDetailsState();
 }
 
 class _BillDetailsState extends State<AllBills> {
+  var total_balance;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     print(_calTotalBill(widget.data));
+    total_balance = _calTotalBill(widget.data);
     // print(widget.data[0]['item']);
   }
 
@@ -50,7 +51,7 @@ class _BillDetailsState extends State<AllBills> {
                   resizeToAvoidBottomInset: true,
                   backgroundColor: Colors.transparent,
                   appBar: AppBar(
-                    title: Text('Bills', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, fontStyle: FontStyle.normal, fontFamily: "Museo Sans"),),
+                    title: Text('All Bills', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, fontStyle: FontStyle.normal, fontFamily: "Museo Sans"),),
                     backgroundColor: Colors.transparent,
                     centerTitle: true,
                     primary: true,
@@ -90,6 +91,11 @@ class _BillDetailsState extends State<AllBills> {
                                               //   ),
                                               // ),
 
+                                              Center(
+                                                child: Text('All Bills to be paid'),
+                                              ),
+
+                                              SizedBox(height: 20,),
                                               // ListView for the display of all the bills
                                               Container(
                                                 width: MediaQuery.of(context).size.width * 0.85,
@@ -107,7 +113,7 @@ class _BillDetailsState extends State<AllBills> {
                                                                               child: Row(
                                                                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                                                 children: <Widget>[
-                                                                                  Text("${widget.data[index]['item']}", style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
+                                                                                  Text("${widget.data[index]['item']} (N${widget.data[index]['dr']})", style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
                                                                                   Text("${widget.data[index]['createdAt']}", style: TextStyle(color: hex("#000000"), fontFamily: "Museo Sans", fontSize: 11.0, fontWeight: FontWeight.w300, fontStyle: FontStyle.normal),),
                                                                                 ],
                                                                               ),
@@ -119,7 +125,7 @@ class _BillDetailsState extends State<AllBills> {
                                               SizedBox(height: 80,),
                                               Image.asset('images/credit_card.png', ),
                                               SizedBox(height: 40,),
-                                              Text('N ${widget.total_balance}', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: hex("#4F4B4B"), fontStyle: FontStyle.normal, fontFamily: "Museo Sans"),),
+                                              Text('N ${total_balance}', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: hex("#4F4B4B"), fontStyle: FontStyle.normal, fontFamily: "Museo Sans"),),
                                               SizedBox(height: 40.0,),
 
                                               // Pay Button
