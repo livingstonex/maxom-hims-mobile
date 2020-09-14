@@ -76,7 +76,7 @@ class _ProfileState extends State<Profile> {
             data: formData,
           );
 
-          // print(response.data['photo']);
+          print(response.data['photo']);
         } catch (err) {
           print('uploading error: $err');
         }

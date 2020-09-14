@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hims_mobile/handlers/helpers.dart';
+import 'package:hims_mobile/handlers/requests.dart';
 import '../../../reusables/color_converter.dart';
 import './bill_success.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 
 
 
@@ -13,25 +18,167 @@ class AllBills extends StatefulWidget {
 }
 
 class _BillDetailsState extends State<AllBills> {
+  var publicKey = 'pk_test_7b545e0d7a1aaa0e39782e7d5aa7e9595a8082fc';
   var total_balance;
+  List _hmos = [];
+  List _billsIDs = [];
+  var _selectedItem;
+  var _policy;
+  var _singleHMO;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    PaystackPlugin.initialize(publicKey: publicKey);
     print(_calTotalBill(widget.data));
+    _getHMOList();
     total_balance = _calTotalBill(widget.data);
     // print(widget.data[0]['item']);
   }
 
-  // Method definitions
+  // ========== Method definitions ==============
+
+  // Calculate total Bill Function
   _calTotalBill(bills) {
     var total = 0.0;
+    var billIDs = [];
     for (var u in bills){
       total = total + u['dr'];
+      billIDs.add(u['id']);
     }
+    setState(() {
+      _billsIDs = billIDs;
+    });
 
     return total;
+  }
+
+  // Get List of HMOs
+  _getHMOList() async{
+    var _token = await getToken();
+    var _userID = jsonDecode(await getUserData())['id'];
+    var _url = "api/user/coveragebypatient/68";
+    HttpService service = HttpService();
+    var res = await service.getRequest(_url, _token);
+
+    // print(res);
+    setState(() {
+      _hmos = res;
+    });
+    return res;
+  }
+
+  // setSelectedHMO function - to set the HMO that was selected
+  void _setSelectedHMO(selectedValue){
+    setState(() {
+      _selectedItem = selectedValue;
+    });
+
+    print(_policy['discount']);
+  }
+
+  // Payment function
+  _payAllBills() async{
+    var drBal = total_balance.ceil();
+    var bal = 1000.0;
+    bool hmo = false;
+
+    // Calculate this discount based on if HMO is selected
+      // First check that _policy is not null
+      if(_policy != null){
+        print('Policy discount is not null');
+        var discountAmount = (_policy['discount'] / 100) * bal;
+        bal = bal - discountAmount;
+        hmo = true;
+        print(bal);
+      }
+
+
+    // Get User Email
+    var _userEmail = jsonDecode(await getUserData())['email'];
+    // print(_userEmail);
+
+    // If bal is less than N100, you are still going to pay N100
+    if((bal.ceil()) < 100){
+       bal = 100;
+    }
+
+    // Create a Charge Object
+    Charge charge = Charge()
+           ..amount = bal.ceil() * 100
+          //  Replace reference with widget.data['refNo']
+           ..reference = '123456788888888899'
+           ..email = _userEmail;
+    
+    print(charge.amount);
+     
+   
+    // Create the CheckoutResponse (i.e actual payment)
+    CheckoutResponse response = await PaystackPlugin.checkout(
+      context, 
+      charge: charge,
+      method: CheckoutMethod.card,
+    );
+
+    print(response);
+    print(response.message);
+
+    // Check response message and take action based on that
+    if (response.message == 'Success') {
+        print('payment successful');
+        if((_policy != null) && (_singleHMO != null)){
+          _backendVerify(bal, response.reference, hmo, policyId: _policy['id'], hmoReferenceNo: _singleHMO['referenceNo']);
+          return;
+        }
+
+        _backendVerify(bal, response.reference, hmo);
+      }
+  }
+
+   // Backend Verification
+  _backendVerify(double amount, String reference, bool hmo, {int policyId, String hmoReferenceNo}) async{
+    var _token = await getToken();
+    var _encodedUser = await getUserData();
+    var _decodedUser = jsonDecode(_encodedUser);
+    var _userId = _decodedUser['id'];
+    // var _user = jsonDecode(await getUserData())['id'];
+    
+    // Define remote url
+    // widget.historyId.toString()
+    // _userId.toString()
+
+    // Variable declarations
+    var _url = "api/accountant/paybill";
+    Map data = {
+                "amount": amount,
+                "billIds" : _billsIDs,
+                "patientId": _userId,
+                "item": 'Bulk Bills Payment',
+                "breakdown": {
+                  "card": true,
+                  "cardAmount": amount,
+                  "cardBankId": 0,
+                  "cardRef": reference,
+                  "hmo":  hmo,
+                  "hmoPolicyId": (hmo && (policyId != null)) ? policyId : null,
+                  "hmoRefNo": (hmo && (hmoReferenceNo != null)) ? hmoReferenceNo : null
+                }
+              }; 
+    
+    var jsonData = jsonEncode(data);
+    print(jsonData);
+
+    HttpService service = HttpService();
+      var res = await service.postRequest(_url, _token, jsonData);
+      print(res);
+      // If res == success, navigate to the bill_success page
+      if(res.message == 'Success'){
+       Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); 
+       return;
+      }
+
+      print("Verification failed");
   }
 
   @override
@@ -122,6 +269,45 @@ class _BillDetailsState extends State<AllBills> {
                                                           ),
                                               ),
 
+                                              SizedBox(height: 30,),
+                                              DropdownButton(
+                                                    items: _hmos.map((dropdownItem){
+                                                      // print(_hmos[1]['insurancePolicy']['title']);
+                                                      // print(dropdownItem['insurancePolicy']['title']);
+                                                      return DropdownMenuItem(
+                                                        value: dropdownItem['id'],
+                                                        child: Text(dropdownItem['insurancePolicy']['title']),
+                                                        onTap: (){
+                                                          print(dropdownItem['insurancePolicy']);
+                                                          setState(() {
+                                                            _policy = dropdownItem['insurancePolicy'];
+                                                            _singleHMO = dropdownItem;
+                                                          });
+                                                        },
+                                                        );
+                                                    }).toList(),  
+                                                    
+                                                    /* 
+                                                      Remember to put the check for balance < 100, like  this:
+                                                      onChanged: (widget.balance < 100) ? null : (value) {
+                                                        _setSelectedHMO(value);
+                                                      },
+                                                     */
+
+                                                    onChanged: (value) {
+                                                      _setSelectedHMO(value);
+                                                    },
+
+                                                    value: _selectedItem,
+                                                    dropdownColor: Colors.blue[300],
+                                                    isDense: true,
+                                                    hint: Text('Select HMO'),
+                                                    disabledHint: Text('Disabled'),
+                                                    elevation: 50,
+                                                    focusColor: Colors.blue[700],
+                                                    iconEnabledColor: Colors.blue[900],
+                                                  ),  
+
                                               SizedBox(height: 80,),
                                               Image.asset('images/credit_card.png', ),
                                               SizedBox(height: 40,),
@@ -135,7 +321,10 @@ class _BillDetailsState extends State<AllBills> {
                                                     borderRadius: BorderRadius.circular(22.0),
                                                     child: MaterialButton(
                                                       disabledColor: Colors.blue[200],
-                                                      onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); },
+                                                      onPressed: () { 
+                                                        _payAllBills();
+                                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); 
+                                                        },
                                                       height: 47.0,
                                                       // minWidth: MediaQuery.of(context).size * 0.5,
                                                       color: hex("#236DD0"),

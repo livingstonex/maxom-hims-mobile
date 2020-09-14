@@ -60,9 +60,11 @@ class _OutstandingBillsState extends State<OutstandingBills> {
       _billzz = res;
     });
 
-    if(res.length > 0){
+    // Enable button to pay all bills and set billzz array only if bills are more than one
+    if(res.length > 1){
       setState(() {
         allbills = true;
+        _billzz = res;
       });
     }
     
@@ -213,10 +215,12 @@ Future<Null> _refresh() {
                                                                         scrollDirection: Axis.vertical,
                                                                         shrinkWrap: true,
                                                                         itemBuilder: (BuildContext context, int index){
-                                                                          return  InkWell(
-                                                                                      child: PersonCard(title: 'N ${snapshot.data[index]['dr']}', subTitle: '${snapshot.data[index]['item']}',  rightSubTitle: '${snapshot.data[index]['createdAt']}',),
-                                                                                      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => BillDetails(balance: snapshot.data[index]['dr'], data: snapshot.data[index],) )); }
-                                                                                    );
+                                                                            if(snapshot.data[index]['paid'] != true){
+                                                                                return  InkWell(
+                                                                                          child: PersonCard(title: 'N ${snapshot.data[index]['dr']}', subTitle: '${snapshot.data[index]['item']}',  rightSubTitle: '${snapshot.data[index]['createdAt']}',),
+                                                                                          onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => BillDetails(balance: snapshot.data[index]['dr'], data: snapshot.data[index],) )); }
+                                                                                        );
+                                                                            }
                                                                         },
                                                                       );
                                                                 }else{

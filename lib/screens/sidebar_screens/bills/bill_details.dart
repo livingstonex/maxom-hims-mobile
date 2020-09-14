@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hims_mobile/handlers/helpers.dart';
 import 'package:hims_mobile/handlers/requests.dart';
+import 'package:hims_mobile/screens/sidebar_screens/bills/tab_screens/outstanding_bills.dart';
+import 'package:hims_mobile/screens/sidebar_screens/bills/top_tab_bar/bills_tabs.dart';
 import '../../../reusables/color_converter.dart';
 import './bill_success.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
@@ -65,7 +67,7 @@ class _BillDetailsState extends State<BillDetails> {
     Charge charge = Charge()
            ..amount = bal.ceil() * 100
           //  Replace reference with widget.data['refNo']
-           ..reference = '1234567888888888'
+           ..reference = '123456788888888866665'
            ..email = _userEmail;
     
     print(charge.amount);
@@ -126,14 +128,41 @@ class _BillDetailsState extends State<BillDetails> {
     var jsonData = jsonEncode(data);
     print(jsonData);
 
-    // HttpService service = HttpService();
-    //   var res = await service.postRequest(_url, _token, jsonData);
-    //   print(res);
-    //   If res == success, navigate to the bill_success page
-    //   if(res.message == 'Success'){
-      //  Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); 
-    //   }
-    //   return res;
+    HttpService service = HttpService();
+      var res = await service.postRequest(_url, _token, jsonData);
+      print(res);
+      // print(res.status);
+      print(res['status']);
+      // If response status is 200 (success), navigate to the bill_success page
+      if(res['status'] == 200){
+       Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); 
+       return;
+      }
+
+       // If response status is 400 (error), navigate to the bill_success page
+      if(res['status'] == 400){
+          showDialog(
+              context: context,
+              builder: (BuildContext context){
+                return AlertDialog(
+                  title: Text('Are you sure?'),
+                  content: Text('Verification was not successfull, contact admin.'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Ok'),
+                      onPressed: (){
+                        // Navigator.of(context).pop(false);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => BillsTabs() )); 
+                        // return;
+                      },
+                    ),
+                  ],
+                );
+              }
+            );
+      }
+
+      // print("There was an error");
   }
 
   @override
