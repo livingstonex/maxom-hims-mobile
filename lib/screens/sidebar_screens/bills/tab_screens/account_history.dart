@@ -180,7 +180,7 @@ class _AccountHistoryState extends State<AccountHistory> {
                                                                   scrollDirection: Axis.vertical,
                                                                   shrinkWrap: true,
                                                                   itemBuilder: (BuildContext context, int index){
-                                                                    return PersonCard(title: 'N ${snapshot.data[index].dr}', subTitle: '${snapshot.data[index].item}', rightSubTitle: '${snapshot.data[index].createdAt}',);
+                                                                    return PersonCard(title: 'N ${snapshot.data[index].cr}', subTitle: '${snapshot.data[index].item}', rightSubTitle: '${snapshot.data[index].createdAt}',);
                                                                   },
                                                                 );
                                                           }else{
