@@ -4,7 +4,9 @@ import '../bills/top_tab_bar/bills_tabs.dart';
 
 
 class BillSuccess extends StatefulWidget {
-  BillSuccess({Key key,}): super(key: key);
+  var success;
+
+  BillSuccess({Key key, this.success}): super(key: key);
 
   @override
   _BillSuccessState createState() => _BillSuccessState();
@@ -56,7 +58,7 @@ class _BillSuccessState extends State<BillSuccess> {
                                               SizedBox(height: 80,),
                                               Image.asset('images/success_check.png', ),
                                               SizedBox(height: 40,),
-                                              Text('Payment Complete', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: hex("#4F4B4B"), fontStyle: FontStyle.normal, fontFamily: "Museo Sans"),),
+                                              Text("${widget.success}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: hex("#4F4B4B"), fontStyle: FontStyle.normal, fontFamily: "Museo Sans"),),
                                               SizedBox(height: 40.0,),
 
                                               // Pay Button

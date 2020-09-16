@@ -39,8 +39,9 @@ class _BillDetailsState extends State<BillDetails> {
   // Pay specific bill
   _payBill() async{
     // print(_singleHMO['referenceNo']);
-    var drBal = widget.balance.ceil();
-    var bal = 1000.0;
+    var bal = widget.balance.toDouble(); 
+    // var bal = 1000.0;
+    // _backendVerify(1000, 'kbhk', false);
     bool hmo = false;
 
     // Calculate this discount based on if HMO is selected
@@ -67,7 +68,7 @@ class _BillDetailsState extends State<BillDetails> {
     Charge charge = Charge()
            ..amount = bal.ceil() * 100
           //  Replace reference with widget.data['refNo']
-           ..reference = '123456788888888866665'
+           ..reference = '123456788888888866665544reerrd'
            ..email = _userEmail;
     
     print(charge.amount);
@@ -110,37 +111,37 @@ class _BillDetailsState extends State<BillDetails> {
     // Variable declarations
     var _url = "api/accountant/paybill";
     Map data = {
-                "amount": amount,
+                "amount": "$amount",
                 "billIds" : [widget.data['id']],
-                "patientId": _userId,
+                "patientId": "$_userId",
                 "item": widget.data['item'],
                 "breakdown": {
                   "card": true,
-                  "cardAmount": amount,
+                  "cardAmount": "$amount",
                   "cardBankId": 0,
-                  "cardRef": reference,
+                  "cardRef": "$reference",
                   "hmo":  hmo,
                   "hmoPolicyId": (hmo && (policyId != null)) ? policyId : 0,
-                  "hmoRefNo": (hmo && (hmoReferenceNo != null)) ? hmoReferenceNo : ""
+                  "hmoRefNo": (hmo && (hmoReferenceNo != null)) ? "$hmoReferenceNo" : ""
                 }
               }; 
     
     var jsonData = jsonEncode(data);
-    print(jsonData);
+    print(data);
 
     HttpService service = HttpService();
-      var res = await service.postRequest(_url, _token, jsonData);
+      var res = await service.postRequest(_url, jsonData, _token);
       print(res);
       // print(res.status);
-      print(res['status']);
+    
       // If response status is 200 (success), navigate to the bill_success page
-      if(res['status'] == 200){
-       Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess())); 
+      if(res['code'] == 0){
+       Navigator.push(context, MaterialPageRoute(builder: (context) => BillSuccess(success: res['message'],))); 
        return;
       }
 
        // If response status is 400 (error), navigate to the bill_success page
-      if(res['status'] == 400){
+      if(res['code'] == 400){
           showDialog(
               context: context,
               builder: (BuildContext context){
