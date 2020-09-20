@@ -22,7 +22,17 @@ class _ProfileState extends State<Profile> {
     int _id;
     PickedFile _image;
     ImagePicker picker = ImagePicker();
-    String profileUrl;
+    String _profileUrl;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+     _profileUrl = getProfileUrl();
+    super.initState();
+  }
+
+  // ==================== METHODS DECLERATIONS ====================== //
     // Get Image
     void _open_gallery() async {
           var image = await picker.getImage(source: ImageSource.gallery, );
@@ -38,11 +48,25 @@ class _ProfileState extends State<Profile> {
     
     // Get User
     getUser() async{
+      // Get generic user data
       var encodedUser = await getUserData();
       var decodedUser = jsonDecode(encodedUser);
+
+      // Get Profile picture url
+      var profile = await jsonDecode(getProfileUrl());
+
+      print(profile.runtimeType);
       setState(() {
         _id = decodedUser['id'];
+        _profileUrl = profile;
       });
+    }
+
+    getProfileUrl() async{
+      // Get Profile picture url
+      var profile = await jsonDecode(getProfileUrl());
+      print(profile.runtimeType);
+      return profile;
     }
 
     // Post Photo
@@ -78,6 +102,12 @@ class _ProfileState extends State<Profile> {
           );
 
           print(response.data['photo']);
+
+          // Save the returned photo string to shared preferences
+          setProfileUrl(response.data['photo']);
+          setState(() {
+            _profileUrl = response.data['photo'];
+          });
         } catch (err) {
           print('uploading error: $err');
         }
@@ -92,12 +122,6 @@ class _ProfileState extends State<Profile> {
   }
     
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // getUser();
-  }
   @override
   Widget build(BuildContext context) {
     final personal_information = Container(
@@ -261,7 +285,7 @@ class _ProfileState extends State<Profile> {
                                                                                   radius: 18.0,
                                                                                   // _image == null ? Image.asset("images/mayowa_pix.png") : Image.file(_image)
                                                                                    child: ClipRRect(borderRadius: BorderRadius.circular(100),
-                                                                                     child: _image == null ? Image.asset("images/mayowa_pix.png") : Image.file(File(_image.path)),
+                                                                                     child: _profileUrl == null ? Image.asset("images/mayowa_pix.png") : Image.network(_profileUrl),
                                                                                    ),
                                                                                    backgroundColor: Colors.transparent,
                                                                                   ),

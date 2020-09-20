@@ -236,7 +236,7 @@ class _LoginState extends State<Login> {
                                                                     // SAVE USER DATA AND TOKEN TO SHARED PREFERENCES
                                                                     setToken(res['token']);
                                                                     setUserData(jsonEncode(res['user']));
-                                                                    // setProfileUrl(key, url)
+                                                                    // setProfileUrl(jsonEncode(res['user']['profile']))
                                                                   }else{
                                                                     Scaffold.of(innerContext).showSnackBar(SnackBar(content: Text("You are not a patient!"), backgroundColor: Colors.blueAccent,));
                                                                   }
