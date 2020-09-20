@@ -19,6 +19,7 @@ class _LabTestCompareState extends State<LabTestCompare> {
   var dataArray = [];
   var idArray = [];
   var selectedColor = "";
+  var i = "";
   final AsyncMemoizer _memoizer = AsyncMemoizer();
 
   @override
@@ -26,6 +27,16 @@ class _LabTestCompareState extends State<LabTestCompare> {
     super.initState();
 
   }
+
+  // @override
+  // void dispose() { 
+  //   setState(() {
+  //     var dataArray = new List(2);
+  //     var idArray = [];
+  //     var selectedColor = "";
+  //   });
+  //   super.dispose();
+  // }
   
    _getInvestigations() {
      return this._memoizer.runOnce(() async{
@@ -62,29 +73,54 @@ class _LabTestCompareState extends State<LabTestCompare> {
       if(dataArray.contains(obj) == true){
         // dataArray.add(obj);
         print("item is in dataArray");
-        // print(dataArray);
+        print(dataArray);
+        print("case 1");
         return;
       }
       
       if(dataArray.contains(obj) == false){
         dataArray.add(obj);
         print("Item is not inside, it was just added");
-        // print(dataArray);
+        print(dataArray);
+        print("case 2");
+        return;
       }
-      print(dataArray);
+      // print(dataArray);
 
       // Cater for ID Array
-      if(idArray.contains(obj['id']) == true){
-        // idArray.add(obj['id']);
+      // if(idArray.contains(obj['id']) == true){
+      //   // idArray.add(obj['id']);
+      //   return;
+      // }
+
+      // if(idArray.contains(obj['id']) == false){
+      //   idArray.add(obj['id']);
+      // }
+      // print(idArray);
+
+    }
+
+    // Check if the items in the array are 2 exactly so that you can pop and replace the last item
+    if(dataArray.length >= 2){
+       if(dataArray.contains(obj) == false){
+        // I need a javascript splice equivalent in dart
+        dataArray.removeLast();
+        dataArray.add(obj);
+        print("Item is not inside, the last item was just deleted and this was added");
+        print(dataArray);
+        print("case 3");
+        
         return;
       }
 
-      if(idArray.contains(obj['id']) == false){
-        idArray.add(obj['id']);
-      }
-      print(idArray);
-
+      if(dataArray.contains(obj) == true){
+        print("object exists as part of the 2");
+        return;
+      } 
     }
+
+    print(dataArray);
+    print("case 4");
   }
 
   _checkColor(id){
@@ -228,12 +264,15 @@ class _LabTestCompareState extends State<LabTestCompare> {
                                                                   shrinkWrap: true,
                                                                   itemBuilder: (BuildContext context, int index){
                                                                     // AppointmentCard(confirmed: snapshot.data[index]['confirmed'], dateTime: snapshot.data[index]['dateTime'],),
-                                                                    print(snapshot.data[index]['id']);
+                                                                    // print(snapshot.data[index]['id']);
                                                                     return InkWell(
                                                                                   child: LabTestCard(imageUrl: 'images/syringe2.png', subTitle: 'Full Blood Count', rightSubTitle: 'June 12', circleColor: "#119745", bgColor: selectedColor,),
                                                                                   onTap: (){ 
                                                                                     _setCompare(snapshot.data[index]);
-                                                                                    _checkColor(snapshot.data[index]['id']);
+                                                                                    // _checkColor(snapshot.data[index]['id']);
+                                                                                    setState(() {
+                                                                                      i = "hey";
+                                                                                    });
                                                                                     },
                                                                                 );
                                                                   },

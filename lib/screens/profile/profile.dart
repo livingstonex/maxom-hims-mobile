@@ -22,6 +22,7 @@ class _ProfileState extends State<Profile> {
     int _id;
     PickedFile _image;
     ImagePicker picker = ImagePicker();
+    String profileUrl;
     // Get Image
     void _open_gallery() async {
           var image = await picker.getImage(source: ImageSource.gallery, );
@@ -29,8 +30,8 @@ class _ProfileState extends State<Profile> {
               _image = image;
             });
           print(_image);
-          //  var formData = FormData(_image);
-          // Send Image to Server
+          // var formData = FormData(_image); 
+          // Send Image to Server 
           _photoUpdate(_image);
     }
 

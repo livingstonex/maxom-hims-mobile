@@ -12,14 +12,25 @@ getToken() async{
   return prefs.getString('token');
 }
 
+// Specific functions
 setUserData(data) async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('user', data);
 }
 
+setProfileUrl(url) async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('url', url);
+}
+
 getUserData() async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString('user');
+}
+
+getProfileUrl() async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('url');
 }
 
 // Generic Functions
@@ -32,6 +43,7 @@ getData(String key) async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString(key);
 }
+
 
 // Logout Function
 logOut() async{
