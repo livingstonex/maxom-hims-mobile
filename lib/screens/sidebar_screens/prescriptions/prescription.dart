@@ -40,21 +40,15 @@ class _PrescriptionsState extends State<Prescriptions> {
     print(_url);
     HttpService service = HttpService();
     try {
+    //  HttpService service = HttpService();
       var res = await service.getRequest(_url, _token);
-      List<Data> prescriptionData = [];
-      for (var u in res) {
-        print(u['id'].runtimeType);
-        Data singleData = Data(u['medicine'], u['instruction'], u['form'], u['strength'], u['route'], u['dose'], u['frequency'], u['duration'], u['foodRelation'], u['prescribedBy']);
-        prescriptionData.add(singleData);
-      }
+      print(res);
 
-      // Set State for the prescription count
-      // setState(() {
-      //   medicineCount = prescriptionData.length;
-      // });
-
-      print(prescriptionData.length);
-      return prescriptionData;
+      // Set the state for medicineCount
+      setState(() {
+        medicineCount = res.length;
+      });
+      return res;
     } catch (e) {
       print(e);
     }
@@ -139,7 +133,7 @@ class _PrescriptionsState extends State<Prescriptions> {
                                                                               shrinkWrap: true,
                                                                               itemBuilder: (BuildContext context, int index){
                                                                                 return InkWell(
-                                                                                  child: PersonCard(subTitle: "${snapshot.data[index].medicine}",),
+                                                                                  child: PersonCard(subTitle: "${snapshot.data[index]['medicine']}",),
                                                                                   onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => PrescriptionDetails(data: snapshot.data[index],) )); },
                                                                                   );
                                                                               },

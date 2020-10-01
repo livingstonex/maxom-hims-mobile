@@ -147,7 +147,7 @@ class _VitalDetailsState extends State<VitalDetails> {
 
                                             SizedBox(height: 30,),
                                             // Person Card Display
-                                            PersonCard(imageUrl: "images/booked_appointment_image.png", title: 'June 2, 2020', subTitle: 'Nurse Titi',)  
+                                            // PersonCard(imageUrl: "images/booked_appointment_image.png", title: 'June 2, 2020', subTitle: 'Nurse Titi',)  
 
                                         ],
                             ),

@@ -17,6 +17,7 @@ class MedicalHistoryHome extends StatefulWidget {
 class _MedicalHistoryHomeState extends State<MedicalHistoryHome> {
   // final AsyncMemoizer _memoizer = AsyncMemoizer();
   var _history;
+  bool loaded = false;
 
   @override
   void initState() { 
@@ -46,6 +47,9 @@ class _MedicalHistoryHomeState extends State<MedicalHistoryHome> {
       }
 
       print(medData.length);
+      setState(() {
+        loaded = true;
+      });
       return medData;
     } catch (e) {
       print(e);
@@ -163,7 +167,7 @@ class _MedicalHistoryHomeState extends State<MedicalHistoryHome> {
                                                   borderRadius: BorderRadius.circular(22.0),
                                                   child: MaterialButton(
                                                     disabledColor: Colors.blue[200],
-                                                    onPressed: (){
+                                                    onPressed: !loaded ? null : (){
                                                       _refresh();
                                                     },
                                                     height: 47.0,
