@@ -54,7 +54,7 @@ class LabTestCompareDetails extends StatelessWidget {
                                           // Content
                                           // Top Test Compare =========================================
                                          Center(
-                                           child: Text('Full Blood Count', style: TextStyle(color: hex('#4F4B4B'), fontSize: 14.0, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal,),),
+                                           child: Text(data[0]['diagnosisTitle'], style: TextStyle(color: hex('#4F4B4B'), fontSize: 14.0, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal,),),
                                          ),
 
                                          SizedBox(height: 30,),
@@ -97,8 +97,7 @@ class LabTestCompareDetails extends StatelessWidget {
 
                                                   // Botttom Test Compare ===============================
                                                   Center(
-                                                    child: 
-                                                    Text('Malaria Parasite', style: TextStyle(color: hex('#4F4B4B'), fontSize: 14.0, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal,),),
+                                                    child: Text(data[1]['diagnosisTitle'], style: TextStyle(color: hex('#4F4B4B'), fontSize: 14.0, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal,),),
                                                   ),
 
                                                   SizedBox(height: 10,),

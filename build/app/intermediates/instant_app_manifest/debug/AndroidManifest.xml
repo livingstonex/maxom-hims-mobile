@@ -63,6 +63,10 @@
         </provider>
 
         <activity
+            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
             android:name="co.paystack.flutterpaystack.AuthActivity"
             android:theme="@style/Paystack.Dialog" />
     </application>

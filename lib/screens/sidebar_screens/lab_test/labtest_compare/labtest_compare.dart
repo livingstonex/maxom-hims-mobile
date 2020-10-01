@@ -122,6 +122,7 @@ class _LabTestCompareState extends State<LabTestCompare> {
     print(dataArray);
     print("case 4");
   }
+  
 
   _checkColor(id){
     if(idArray.contains(id) == true){
@@ -140,6 +141,24 @@ class _LabTestCompareState extends State<LabTestCompare> {
     }
   }
 
+   _selectedColor(index){
+    //  print(index);
+     print(dataArray.isEmpty);
+     if(dataArray.isEmpty == false){
+        if (index == dataArray[0]['id']){
+          return "#119745";
+        }
+
+        if (dataArray.length == 2){
+           if (index == dataArray[1]['id']){
+              return "#119745";
+            }
+        }
+     }
+    
+
+     return "#ffffff";
+   } 
 
   _clear(){
     setState(() {
@@ -266,7 +285,7 @@ class _LabTestCompareState extends State<LabTestCompare> {
                                                                     // AppointmentCard(confirmed: snapshot.data[index]['confirmed'], dateTime: snapshot.data[index]['dateTime'],),
                                                                     // print(snapshot.data[index]['id']);
                                                                     return InkWell(
-                                                                                  child: LabTestCard(imageUrl: 'images/syringe2.png', subTitle: 'Full Blood Count', rightSubTitle: 'June 12', circleColor: "#119745", bgColor: selectedColor,),
+                                                                                  child: LabTestCard(imageUrl: 'images/syringe2.png', subTitle: 'Full Blood Count', rightSubTitle: 'June 12', circleColor: _selectedColor(snapshot.data[index]['id']), bgColor: selectedColor,),
                                                                                   onTap: (){ 
                                                                                     _setCompare(snapshot.data[index]);
                                                                                     // _checkColor(snapshot.data[index]['id']);
@@ -299,16 +318,16 @@ class _LabTestCompareState extends State<LabTestCompare> {
                                           child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center, 
                                           children: <Widget>[
-                                            dataArray.length >= 1 ? 
+                                            // dataArray.length >= 1 ? 
                                               RaisedButton(
-                                                onPressed: dataArray.length == 1 ? (){
+                                                onPressed: dataArray.length == 2 ? (){
                                                   Navigator.push(context, MaterialPageRoute(builder: (context) => LabTestCompareDetails(title: 'Full Blood Count', data: dataArray,)));
                                                 } : null,
                                                 color: hex("#1A1CF8"),
                                                 shape: StadiumBorder(),
                                                 child: Text("Compare Results", style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                                              )
-                                              : SizedBox() ,
+                                              ),
+                                              // : SizedBox() ,
                                               
                                               SizedBox(width: 20,),
 

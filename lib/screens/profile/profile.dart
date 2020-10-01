@@ -28,8 +28,11 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     // TODO: implement initState
-     _profileUrl = getProfileUrl();
+    //  _profileUrl = getProfileUrl();
+    
     super.initState();
+    // getUser();
+    _getUserProfileUrl();
   }
 
   // ==================== METHODS DECLERATIONS ====================== //
@@ -56,17 +59,21 @@ class _ProfileState extends State<Profile> {
       var profile = await jsonDecode(getProfileUrl());
 
       print(profile.runtimeType);
-      setState(() {
-        _id = decodedUser['id'];
-        _profileUrl = profile;
-      });
+      print(profile);  
+      // setState(() {
+      //   _id = decodedUser['id'];
+      //   _profileUrl = profile;
+      // });
     }
 
-    getProfileUrl() async{
+     _getUserProfileUrl() async{
       // Get Profile picture url
-      var profile = await jsonDecode(getProfileUrl());
+      String profile = await getProfileUrl();
       print(profile.runtimeType);
-      return profile;
+      setState(() {
+        _profileUrl = profile;
+      });
+      // return profile;
     }
 
     // Post Photo
@@ -102,6 +109,7 @@ class _ProfileState extends State<Profile> {
           );
 
           print(response.data['photo']);
+          print(response.data['photo'].runtimeType);
 
           // Save the returned photo string to shared preferences
           setProfileUrl(response.data['photo']);

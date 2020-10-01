@@ -10,6 +10,7 @@ MERGED from [:path_provider] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build
 MERGED from [:path_provider_macos] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/path_provider_macos/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [:image_picker] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-22:12
 MERGED from [:flutter_plugin_android_lifecycle] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_plugin_android_lifecycle/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-14:12
 MERGED from [:shared_preferences] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/shared_preferences/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [:shared_preferences_web] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/shared_preferences_web/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [:shared_preferences_macos] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/shared_preferences_macos/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
@@ -63,6 +64,8 @@ application
 ADDED from /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/android/app/src/main/AndroidManifest.xml:8:5-31:19
 MERGED from [:image_picker] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:10:5-20:19
 MERGED from [:image_picker] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:10:5-20:19
+MERGED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-12:19
+MERGED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-12:19
 MERGED from [:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:9:5-13:19
 MERGED from [:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:9:5-13:19
 MERGED from [com.google.android.material:material:1.2.0-alpha03] /Users/mac/.gradle/caches/transforms-2/files-2.1/9676cc52dad6c8097b8ec51ad02e0263/material-1.2.0-alpha03/AndroidManifest.xml:22:5-20
@@ -139,6 +142,8 @@ MERGED from [:image_picker] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/
 MERGED from [:image_picker] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_plugin_android_lifecycle/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_plugin_android_lifecycle/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:shared_preferences] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/shared_preferences/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:shared_preferences] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/shared_preferences/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:shared_preferences_web] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/shared_preferences_web/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
@@ -235,6 +240,14 @@ ADDED from [:image_picker] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/i
 		ADDED from [:image_picker] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:18:17-72
 	android:name
 		ADDED from [:image_picker] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:17:17-67
+activity#io.flutter.plugins.urllauncher.WebViewActivity
+ADDED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:8:9-11:74
+	android:exported
+		ADDED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:10:13-37
+	android:theme
+		ADDED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:11:13-71
+	android:name
+		ADDED from [:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-74
 activity#co.paystack.flutterpaystack.AuthActivity
 ADDED from [:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:10:9-12:54
 	android:theme

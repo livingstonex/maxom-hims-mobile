@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hims_mobile/screens/appointment/calendar/calendar_schedule.dart';
 import '../../reusables/color_converter.dart';
 import 'package:hims_mobile/handlers/helpers.dart';
 // import 'package:add_2_calendar/add_2_calendar.dart';
@@ -103,8 +104,9 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                                             child: MaterialButton(
                                                               disabledColor: Colors.indigo[400],
                                                               onPressed: () { 
-                                                                retrieveCalendars();
-                                                                addCalendars();
+                                                                Navigator.push(context, MaterialPageRoute(builder: (context) => CalendarSchedule() ));
+                                                                // retrieveCalendars();
+                                                                // addCalendars();
                                                               // print(event.description);
                                                               },
                                                               height: 47.0,
@@ -113,7 +115,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                                               child: Row(
                                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                                 children: <Widget>[
-                                                                  Text('Add to Calender',
+                                                                  Text('View on Calender',
                                                                               style: TextStyle(color: hex("#FFFFFF"), fontSize: 14.0, fontWeight: FontWeight.w500, letterSpacing: 0.5),
                                                                               ),
                                                                 ],

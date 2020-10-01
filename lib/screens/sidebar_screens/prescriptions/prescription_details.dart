@@ -14,6 +14,12 @@ class PrescriptionDetails extends StatefulWidget {
 class _PrescriptionDetailsState extends State<PrescriptionDetails> {
 
   @override
+  void initState() {
+    // TODO: implement initState
+    print(widget.data);
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Container(
                 decoration: BoxDecoration(
@@ -73,7 +79,7 @@ class _PrescriptionDetailsState extends State<PrescriptionDetails> {
                                                       color: Colors.deepPurple[600],
                                                       width: 400,
                                                       topCardHeight: 250,
-                                                      bottomCardHeight: 200,
+                                                      bottomCardHeight: 300,
                                                       borderRadius: 15,
                                                       topCardWidget: topCardWidget("images/mayowa_pix.png"),
                                                       bottomCardWidget: bottomCardWidget(),
@@ -122,11 +128,11 @@ class _PrescriptionDetailsState extends State<PrescriptionDetails> {
         ),
         SizedBox(height: 15),
         Text(
-          '${widget.data.medicine}',
+          '${widget.data['medicine']}',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         SizedBox(height: 15),
-        Text('${widget.data.instruction}',
+        Text('${widget.data['instruction']}',
           style: TextStyle(
               color: Colors.white.withOpacity(0.8),
               fontSize: 12,
@@ -140,14 +146,95 @@ class _PrescriptionDetailsState extends State<PrescriptionDetails> {
 
 
   Widget bottomCardWidget() {
-    return Text(
-      'It doesn\'t matter \nwhat your name is.',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
+    return SingleChildScrollView(
+          child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Center(child: Text('Details:'),),
+                    ),
+
+                    // Single Row
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Start Date'),
+                          Text(widget.data['startDate'])
+                        ],
+                      ),
+                    ),
+
+                    // Route
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Route'),
+                          Text(widget.data['route'])
+                        ],
+                      ),
+                    ),
+
+                    // Dose
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Dose'),
+                          Text(widget.data['dose'].toString())
+                        ],
+                      ),
+                    ),
+
+                    // Frequency
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Frequency'),
+                          Text(widget.data['frequency'].toString())
+                        ],
+                      ),
+                    ),
+
+                    // Duration
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Duration'),
+                          Text(widget.data['duration'].toString())
+                        ],
+                      ),
+                    ),
+
+                    // Food Relation
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Food Relation'),
+                          Text(widget.data['foodRelation'])
+                        ],
+                      ),
+                    ),
+                  ],
       ),
-      textAlign: TextAlign.center,
     );
   }
 }

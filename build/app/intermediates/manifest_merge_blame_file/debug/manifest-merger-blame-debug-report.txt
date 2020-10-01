@@ -101,11 +101,19 @@
 62        </provider>
 63
 64        <activity
-64-->[:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:10:9-12:54
-65            android:name="co.paystack.flutterpaystack.AuthActivity"
-65-->[:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:11:13-68
-66            android:theme="@style/Paystack.Dialog" />
-66-->[:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:12:13-51
-67    </application>
-68
-69</manifest>
+64-->[:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:8:9-11:74
+65            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+65-->[:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-74
+66            android:exported="false"
+66-->[:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:10:13-37
+67            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+67-->[:url_launcher] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:11:13-71
+68        <activity
+68-->[:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:10:9-12:54
+69            android:name="co.paystack.flutterpaystack.AuthActivity"
+69-->[:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:11:13-68
+70            android:theme="@style/Paystack.Dialog" />
+70-->[:flutter_paystack] /Users/mac/Desktop/projekte/Maxom-HIMS-Mobile/build/flutter_paystack/intermediates/library_manifest/debug/AndroidManifest.xml:12:13-51
+71    </application>
+72
+73</manifest>

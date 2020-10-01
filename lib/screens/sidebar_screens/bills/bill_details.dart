@@ -146,7 +146,7 @@ class _BillDetailsState extends State<BillDetails> {
               context: context,
               builder: (BuildContext context){
                 return AlertDialog(
-                  title: Text('Are you sure?'),
+                  title: Text('Verification Failed?'),
                   content: Text('Verification was not successfull, contact admin.'),
                   actions: <Widget>[
                     FlatButton(
